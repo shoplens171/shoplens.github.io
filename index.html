@@ -1,29 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Shoplens – Find Anything You See</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
+  <!-- Sparkles -->
+  <div class="sparkle s1">✦</div>
+  <div class="sparkle s2">✦</div>
+  <div class="sparkle s3">+</div>
+  <div class="sparkle s4">✦</div>
+
+  <!-- NAV -->
   <nav class="navbar">
     <div class="logo">shoplens</div>
-    <button class="btn-primary nav-btn">
-      <span class="btn-icon">📷</span> Get Started
-    </button>
+    <button class="nav-btn">📷 Get Started</button>
   </nav>
 
+  <!-- HERO -->
   <section class="hero">
-    <div class="hero-text">
+
+    <!-- LEFT TEXT -->
+    <div class="hero-left">
       <h1 class="headline">
         Find anything<br>
         you see<br>
-        with <span class="gradient-text">AI.</span>
+        with <span class="ai-text">AI.</span>
       </h1>
       <p class="subtext">
         Upload a screenshot and let our vision engine identify the product,
@@ -31,17 +39,15 @@
       </p>
 
       <div class="cta-card">
-        <div class="cta-icon-wrap">
-          <span>📷</span>
-        </div>
-        <div class="cta-text">
+        <div class="cta-icon">📷</div>
+        <div class="cta-words">
           <strong>Get Started</strong>
-          <p>Upload a screenshot to find what you're looking for.</p>
+          <span>Upload a screenshot to find what you're looking for.</span>
         </div>
-        <button class="arrow-btn">→</button>
+        <button class="arrow">→</button>
       </div>
 
-      <div class="trust-badges">
+      <div class="badges">
         <span>🛡 Fast</span>
         <span class="dot">•</span>
         <span>🎯 Accurate</span>
@@ -50,49 +56,53 @@
       </div>
     </div>
 
-    <div class="hero-visual">
-      <div class="orb-wrapper">
+    <!-- RIGHT ORB -->
+    <div class="hero-right">
+      <div class="orb-scene">
         <div class="orb">
-          <div class="orb-inner"></div>
-          <div class="ring ring1"></div>
-          <div class="ring ring2"></div>
-          <div class="glow-dot d1"></div>
-          <div class="glow-dot d2"></div>
-          <div class="glow-dot d3"></div>
+          <div class="orb-core"></div>
+          <div class="ring r1"></div>
+          <div class="ring r2"></div>
+          <div class="dot-glow g1"></div>
+          <div class="dot-glow g2"></div>
+          <div class="dot-glow g3"></div>
         </div>
-        <div class="orb-base"></div>
+        <div class="orb-shadow"></div>
       </div>
     </div>
+
   </section>
 
+  <!-- FEATURES -->
   <section class="features">
-    <div class="feature-card">
-      <div class="feature-icon purple">🔍</div>
+    <div class="feat">
+      <div class="feat-icon purple">🔍</div>
       <h3>Identify</h3>
       <p>AI detects products in your screenshot instantly.</p>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon blue">🏷</div>
+    <div class="feat">
+      <div class="feat-icon blue">🏷</div>
       <h3>Compare</h3>
       <p>We compare prices across multiple stores for you.</p>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon green">🛍</div>
+    <div class="feat">
+      <div class="feat-icon green">🛍</div>
       <h3>Buy</h3>
       <p>Find the best deals and buy from trusted retailers.</p>
     </div>
   </section>
 
-  <footer class="social-proof">
+  <!-- FOOTER -->
+  <footer class="footer">
     <div class="avatars">
-      <img src="https://i.pravatar.cc/40?img=1" alt="user"/>
-      <img src="https://i.pravatar.cc/40?img=2" alt="user"/>
-      <img src="https://i.pravatar.cc/40?img=3" alt="user"/>
-      <img src="https://i.pravatar.cc/40?img=4" alt="user"/>
-      <img src="https://i.pravatar.cc/40?img=5" alt="user"/>
+      <img src="https://i.pravatar.cc/40?img=1"/>
+      <img src="https://i.pravatar.cc/40?img=2"/>
+      <img src="https://i.pravatar.cc/40?img=3"/>
+      <img src="https://i.pravatar.cc/40?img=4"/>
+      <img src="https://i.pravatar.cc/40?img=5"/>
     </div>
     <p>Trusted by thousands of smart shoppers</p>
-    <div class="footer-link">🔒 shoplens.github.io</div>
+    <span class="footer-link">🔒 shoplens.github.io</span>
   </footer>
 
   <script src="script.js"></script>
