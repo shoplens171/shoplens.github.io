@@ -1,70 +1,3 @@
-// ===============================
-// 🔥 SHOPLENS CORE NAV SYSTEM
-// ===============================
-
-function showPage(pageId) {
-  const pages = document.querySelectorAll(".page");
-
-  pages.forEach(page => {
-    page.classList.remove("active");
-  });
-
-  const target = document.getElementById(pageId);
-  if (target) {
-    target.classList.add("active");
-  }
-}
-
-// ===============================
-// 🤖 AI SEARCH SYSTEM
-// ===============================
-
-function searchAI() {
-  let input = document.getElementById("searchBox");
-  let out = document.getElementById("results");
-
-  if (!input || !out) return;
-
-  let q = input.value.toLowerCase();
-
-  if (q.includes("shoes")) {
-    out.innerHTML = `
-      <div class="card">
-        👟 Nike Running Shoes<br>
-        💰 ₹1499<br>
-        ⭐ Quality: High<br>
-        📦 Stock: Available<br>
-        🧠 Best for gym & daily wear
-      </div>
-    `;
-  } 
-  else if (q.includes("outfit")) {
-    out.innerHTML = `
-      <div class="card">
-        👕 Streetwear Outfit<br>
-        Hoodie + Jeans + Sneakers<br>
-        💰 ₹2499 estimated<br>
-        ⭐ Trending style
-      </div>
-    `;
-  } 
-  else {
-    out.innerHTML = `
-      <div class="card">
-        Try searching:<br>
-        • shoes<br>
-        • outfit<br>
-        • gym wear<br>
-        • streetwear
-      </div>
-    `;
-  }
-}
-
-// ===============================
-// ✨ YOUR ORIGINAL FEATURE ANIMATION
-// ===============================
-
 // Scroll reveal for feature cards
 const cards = document.querySelectorAll('.feat');
 
@@ -87,20 +20,14 @@ cards.forEach(card => {
   observer.observe(card);
 });
 
-// ===============================
-// 📷 CTA CLICK (SAFE VERSION)
-// ===============================
-
+// CTA click
 const cta = document.querySelector('.cta-card');
 
 cta?.addEventListener('click', () => {
   alert('📷 AI image upload coming soon!');
 });
 
-// ===============================
-// 📌 NAV BUTTON SCROLL (SAFE)
-// ===============================
-
+// Nav button scroll
 const navBtn = document.querySelector('.nav-btn');
 
 navBtn?.addEventListener('click', () => {
