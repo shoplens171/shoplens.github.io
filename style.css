@@ -1,4 +1,3 @@
-/* --- RESET --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -10,89 +9,41 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  overflow-x: hidden;
 }
 
-/* --- NAVBAR --- */
-.navbar {
-  width: 100%;
-  max-width: 900px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 0;
-}
+.navbar { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
 
-.nav-btn {
-  background: #5b21b6;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 50px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(91, 33, 182, 0.3);
-}
+.nav-btn { background: #5b21b6; color: white; padding: 12px 24px; border-radius: 50px; border: none; font-weight: 600; cursor: pointer; }
 
-/* --- HERO SECTION --- */
-.hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 600px;
-  margin: 40px auto;
-}
+/* Hero Layout */
+.hero { display: flex; align-items: center; justify-content: space-between; max-width: 1000px; margin: 60px auto; position: relative; }
+.hero-left { max-width: 500px; }
 
-.headline { 
-  font-family: 'Syne', sans-serif; 
-  font-size: 56px; 
-  line-height: 1.1; 
-  margin-bottom: 20px; 
-  color: #1a1a1a;
-}
-
+.headline { font-family: 'Syne', sans-serif; font-size: 64px; line-height: 1; margin-bottom: 20px; }
 .ai-text { color: #5b21b6; }
+.subtext { margin-bottom: 30px; color: #666; }
 
-/* --- GLASSMORPHIC CARD --- */
-.cta-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(15px);
-  padding: 20px;
-  border-radius: 24px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  width: 100%;
-  margin: 20px 0;
+/* Glassmorphism */
+.cta-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); padding: 20px; border-radius: 24px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255, 255, 255, 0.8); margin-bottom: 20px; }
+.arrow { background: #5b21b6; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; margin-left: auto; cursor: pointer; }
+
+/* Orb Animation */
+.hero-right { position: relative; width: 300px; height: 300px; display: flex; align-items: center; justify-content: center; }
+.orb { width: 250px; height: 250px; background: radial-gradient(circle, #c084fc, #5b21b6); border-radius: 50%; animation: float 4s ease-in-out infinite; box-shadow: 0 20px 40px rgba(91, 33, 182, 0.2); }
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-30px); }
+  100% { transform: translateY(0px); }
 }
 
-.arrow {
-  background: #5b21b6;
-  color: white;
-  border: none;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  margin-left: auto;
-  cursor: pointer;
-}
+/* Sparkles */
+.sparkle { position: absolute; font-size: 20px; color: #5b21b6; animation: blink 2s infinite; }
+.sparkle-1 { top: 10%; left: 40%; }
+.sparkle-2 { bottom: 20%; right: 20%; }
+@keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
-/* --- FEATURE CARDS --- */
-.features {
-  display: flex;
-  gap: 20px;
-  width: 100%;
-  max-width: 900px;
-  margin-top: 40px;
-}
-
-.feat {
-  background: white;
-  padding: 30px;
-  border-radius: 24px;
-  flex: 1;
-  text-align: center;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.04);
-}
+/* Features */
+.features { display: flex; gap: 20px; width: 100%; max-width: 1000px; }
+.feat { background: white; padding: 30px; border-radius: 24px; flex: 1; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
