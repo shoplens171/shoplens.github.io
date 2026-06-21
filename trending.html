@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shoplens – Trending</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="sparkle s1">✦</div>
+  <div class="sparkle s2">✦</div>
+
+  <nav class="navbar">
+    <div class="logo">shoplens</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="search.html" class="nav-link">AI Search</a>
+      <a href="trending.html" class="nav-link active">Trending</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="assistant.html" class="nav-link">Assistant</a>
+    </div>
+    <div class="nav-right">
+      <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+      <button class="nav-btn">📷 Get Started</button>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <h1>What's <span class="ai-text">Trending</span></h1>
+    <p>AI-curated trending outfits and most selling products right now — updated daily just for you.</p>
+  </div>
+
+  <div class="trending-grid" id="trendingGrid">
+    <p style="text-align:center;color:var(--muted);padding:40px;grid-column:1/-1">✨ Loading trends...</p>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const API_KEY = 'AIzaSyAQ.Ab8RN6KxBqxazSg6DnLNPUCPqu-KywRIoqVSJqTkUKuT4QOKRg';
+
+    async function loadTrending() {
+      const grid = document.getElementById('trendingGrid');
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: `You are a fashion and shopping trend AI. 
+              Return exactly 9 trending items right now as JSON array:
+              [{"emoji":"👗","name":"Item Name","category":"Fashion/Tech/Beauty/Home","trend":"one line why its trending","heat":"🔥 Hot OR 🌟 Rising OR ✨ New"}]
+              Return ONLY the JSON array, nothing else.` }]
+            }]
+          })
+        });
+        const data = await res.json();
+        const text = data.candidates[0].content.parts[0].text;
+        const clean = text.replace(/```json|```/g, '').trim();
+        const items = JSON.parse(clean);
+
+        grid.innerHTML = items.map(item => `
+          <div class="trend-card">
+            <div class="trend-emoji">${item.emoji}</div>
+            <h3>${item.name}</h3>
+            <p>${item.trend}</p>
+            <span class="trend-hot">${item.heat}</span>
+          </div>
+        `).join('');
+      } catch (e) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--muted);padding:40px;grid-column:1/-1">❌ Could not load trends. Try refreshing!</p>';
+      }
+    }
+
+    loadTrending();
+  </script>
+</body>
+</html>
