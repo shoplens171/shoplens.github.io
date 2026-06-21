@@ -577,3 +577,28 @@ p {
   opacity: 0.85;
   line-height: 1.6;
 }
+.orb-wrap {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  margin: auto;
+}
+
+.orb {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #4da3ff, #0b0f1a);
+  box-shadow: 0 0 60px rgba(77,163,255,0.6);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: floatOrb 4s ease-in-out infinite;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(-50%, -50%) translateY(0px); }
+  50% { transform: translate(-50%, -50%) translateY(-15px); }
+  100% { transform: translate(-50%, -50%) translateY(0px); }
+}
