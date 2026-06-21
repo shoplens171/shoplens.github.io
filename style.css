@@ -602,3 +602,15 @@ p {
   50% { transform: translate(-50%, -50%) translateY(-15px); }
   100% { transform: translate(-50%, -50%) translateY(0px); }
 }
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.hero-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
