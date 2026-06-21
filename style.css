@@ -1,13 +1,36 @@
-/* --- BASE RESET --- */
+/* --- RESET --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   font-family: 'DM Sans', sans-serif;
-  /* This is the key: A soft atmospheric gradient */
-  background: radial-gradient(circle at top left, #eef2ff, #fdfdff 50%, #ffffff);
-  color: #1a1a1a; /* Dark text for light background */
+  background: radial-gradient(circle at top right, #eef2ff, #fdfdff 50%, #ffffff);
+  color: #1a1a1a;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 20px;
+}
+
+/* --- NAVBAR --- */
+.navbar {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.nav-btn {
+  background: #5b21b6;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(91, 33, 182, 0.3);
 }
 
 /* --- HERO SECTION --- */
@@ -28,22 +51,21 @@ body {
   color: #1a1a1a;
 }
 
-.ai-text { color: #5b21b6; } /* The specific purple AI accent */
+.ai-text { color: #5b21b6; }
 
-.subtext { color: #6b7280; margin-bottom: 30px; font-size: 16px; }
-
-/* --- THE CTA CARD (Glassmorphic) --- */
+/* --- GLASSMORPHIC CARD --- */
 .cta-card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
   padding: 20px;
   border-radius: 24px;
   display: flex;
   align-items: center;
   gap: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   width: 100%;
+  margin: 20px 0;
 }
 
 .arrow {
@@ -57,28 +79,20 @@ body {
   cursor: pointer;
 }
 
-/* --- THE ORB --- */
-.orb {
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(circle at 30% 30%, #a78bfa, #4c1d95);
-  border-radius: 50%;
-  margin-top: 30px;
-  animation: float 4s ease-in-out infinite;
-  box-shadow: 0 20px 40px rgba(124, 92, 252, 0.2);
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
-}
-
-/* --- BADGES --- */
-.badges {
-  margin-top: 15px;
+/* --- FEATURE CARDS --- */
+.features {
   display: flex;
-  gap: 10px;
-  color: #6b7280;
-  font-size: 14px;
+  gap: 20px;
+  width: 100%;
+  max-width: 900px;
+  margin-top: 40px;
+}
+
+.feat {
+  background: white;
+  padding: 30px;
+  border-radius: 24px;
+  flex: 1;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.04);
 }
