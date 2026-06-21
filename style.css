@@ -47,3 +47,54 @@ body {
 /* Features */
 .features { display: flex; gap: 20px; width: 100%; max-width: 1000px; }
 .feat { background: white; padding: 30px; border-radius: 24px; flex: 1; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: radial-gradient(circle at top right, #eef2ff, #fdfdff 50%, #ffffff);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism for the Hero CTA */
+.[span_2](start_span)cta-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px); /* Creates the frosted glass look[span_2](end_span) */
+  -webkit-backdrop-filter: blur(15px);
+  padding: 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Orb Animation */
+.[span_3](start_span)orb {
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, #c084fc, #5b21b6);
+  border-radius: 50%;
+  animation: float 4s ease-in-out infinite; /* Required for the floating effect[span_3](end_span) */
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-30px); }
+}
+
+/* Sparkle Effects */
+.sparkle { 
+  position: absolute; 
+  color: #5b21b6; 
+  animation: blink 2s infinite; 
+}
+
+@keyframes blink { 
+  0%, 100% { opacity: 0; } 
+  50% { opacity: 1; } 
+}
+
