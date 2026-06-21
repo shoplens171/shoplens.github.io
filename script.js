@@ -1,6 +1,5 @@
 // Scroll reveal for feature cards
 const cards = document.querySelectorAll('.feat');
-
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry, i) => {
     if (entry.isIntersecting) {
@@ -20,16 +19,12 @@ cards.forEach(card => {
   observer.observe(card);
 });
 
-// CTA click
 const cta = document.querySelector('.cta-card');
-
 cta?.addEventListener('click', () => {
   alert('📷 AI image upload coming soon!');
 });
 
-// Nav button scroll
 const navBtn = document.querySelector('.nav-btn');
-
 navBtn?.addEventListener('click', () => {
   cta?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
