@@ -553,3 +553,10 @@ body {
 #home {
   display: block;
 }
+.page {
+  display: none;
+}
+
+#home {
+  display: block;
+}
