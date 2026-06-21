@@ -538,3 +538,11 @@ body {
   .r2 { width: 230px; height: 64px; margin-left: -115px; margin-top: -32px; }
   .platform { width: 160px; }
 }
+.page {
+  display: none;
+  padding: 40px;
+}
+
+.page.active {
+  display: block;
+}
