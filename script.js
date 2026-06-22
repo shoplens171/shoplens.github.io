@@ -37,15 +37,13 @@ cards.forEach(card => {
   observer.observe(card);
 });
 
-const cta = document.querySelector('.cta-card');
-if (cta) cta.addEventListener('click', () => window.location.href = 'search.html');
-const navBtn = document.querySelector('.nav-btn');
-if (navBtn) navBtn.addEventListener('click', () => window.location.href = 'search.html');
+// REMOVED: The two event listeners that were forcing auto-navigation on click.
+
 function handlePhoto(event) {
   const file = event.target.files[0];
   if (file) {
     console.log("File selected:", file.name);
-    // You can replace this alert with your logic to send the file to your AI
-    alert("Photo captured successfully: " + file.name);
+    // After a photo is selected, the page will now navigate to search.html
+    window.location.href = 'search.html';
   }
 }
