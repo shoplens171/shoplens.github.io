@@ -1,31 +1,28 @@
 module.exports = async function handler(req, res) {
   try {
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "google/gemma-3-27b-it:free",
-        messages: [
-          {
-            role: "user",
-            content: `Return exactly 9 trending shopping products as a JSON array:
-[
-{"emoji":"👟","name":"Product","category":"Fashion","trend":"Why it's trending","heat":"🔥 Hot"}
-]
-Return ONLY the JSON array.`
-          }
-        ]
-      })
-    });
+    const response = await fetch(
+      `https://serpapi.com/search.json?engine=google_shopping&q=trending+products&api_key=${process.env.SERPAPI_KEY}`
+    );
 
     const data = await response.json();
 
-    res.status(200).json(data);
+    if (!data.shopping_results) {
+      return res.status(500).json({ error: "No trending products found." });
+    }
 
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const items = data.shopping_results.slice(0, 9).map(item => ({
+      emoji: "🛍️",
+      name: item.title,
+      trend: item.source || "Popular online",
+      heat: "🔥 Trending",
+      price: item.price || "Price unavailable",
+      image: item.thumbnail || ""
+    }));
+
+    res.status(200).json(items);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
   }
 };
