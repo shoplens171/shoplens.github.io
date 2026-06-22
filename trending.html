@@ -51,10 +51,10 @@
             'X-Title': 'Shoplens'
           },
           body: JSON.stringify({
-            model: 'meta-llama/llama-3.1-8b-instruct:free',
+            model: 'google/gemma-3-27b-it:free',
             messages: [{
               role: 'user',
-              content: `You are a fashion and shopping trend AI.
+              content: `You are a fashion and shopping trend AI. 
               Return exactly 9 trending items right now as JSON array:
               [{"emoji":"👗","name":"Item Name","category":"Fashion/Tech/Beauty/Home","trend":"one line why its trending","heat":"🔥 Hot OR 🌟 Rising OR ✨ New"}]
               Return ONLY the JSON array, nothing else.`
