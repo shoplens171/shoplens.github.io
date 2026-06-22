@@ -5,7 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Shoplens – About Us</title>
   <link rel="stylesheet" href="style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Using 'Inter' for a modern, clean look; falling back to system fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, .logo { font-family: 'Syne', sans-serif; }
+    
+    /* Founder Section Styling */
+    .founder-container {
+      background: #fcfcfc;
+      border: 1px solid #eee;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .founder-container:hover { transform: translateY(-5px); border-color: var(--purple, #7b61ff); }
+    .founder-name { font-size: 1.5rem; color: #1a1a1a; margin: 10px 0 5px 0; }
+    .founder-handle { 
+      color: var(--purple, #7b61ff); 
+      font-weight: 600; 
+      text-decoration: none; 
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+    }
+  </style>
 </head>
 <body>
   <div class="sparkle s1">✦</div>
@@ -34,7 +58,7 @@
   <div class="about-section">
     <div class="about-card">
       <h2>🚀 Our Mission</h2>
-      <p>Shoplens was built with one goal — to make shopping smarter. We use cutting-edge AI vision to help people instantly identify products, compare prices across stores, and make confident buying decisions without getting scammed.</p>
+      <p>Shoplens was built with one goal — to make shopping smarter. We use cutting-edge AI vision to help people instantly identify products, compare prices across stores, and make confident buying decisions.</p>
     </div>
 
     <div class="about-card">
@@ -47,12 +71,13 @@
       <p>Your screenshots and searches are never stored or sold. We process everything in real-time and delete it immediately. Your privacy is our top priority — always.</p>
     </div>
 
-    <div class="about-card" style="text-align: center;">
+    <!-- Updated Founder Section -->
+    <div class="about-card founder-container">
       <h2>👤 Founder</h2>
-      <p style="margin-bottom: 15px;">Built by a visionary passionate about AI, design, and making shopping smarter for everyone.</p>
+      <p>Built by a visionary passionate about AI and design.</p>
       <div class="founder-profile">
-        <h4 style="margin: 0 0 5px 0; font-size: 1.2rem;">Karanveer Singh</h4>
-        <a href="https://www.instagram.com/cheema._.karan" target="_blank" style="color: var(--purple); font-weight: 700; text-decoration: none; font-size: 1rem;">@cheema._.karan</a>
+        <div class="founder-name">Karanveer Singh</div>
+        <a href="https://www.instagram.com/m4ybe.krn/" target="_blank" rel="noopener noreferrer" class="founder-handle">@m4ybe.krn</a>
       </div>
     </div>
 
