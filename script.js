@@ -1,10 +1,15 @@
 function toggleTheme() {
   const html = document.documentElement;
   const btn = document.querySelector('.theme-btn');
-  const isLight = html.getAttribute('data-theme') === 'light';
-  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
-  if (btn) btn.textContent = isLight ? '☀️' : '🌙';
-  localStorage.setItem('theme', isLight ? 'dark' : 'light');
+  if (html.getAttribute('data-theme') === 'light') {
+    html.setAttribute('data-theme', 'dark');
+    if (btn) btn.textContent = '☀️';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    html.setAttribute('data-theme', 'light');
+    if (btn) btn.textContent = '🌙';
+    localStorage.setItem('theme', 'light');
+  }
 }
 
 const savedTheme = localStorage.getItem('theme') || 'light';
@@ -32,9 +37,13 @@ cards.forEach(card => {
   observer.observe(card);
 });
 
+// REMOVED: The two event listeners that were forcing auto-navigation on click.
+
 function handlePhoto(event) {
   const file = event.target.files[0];
   if (file) {
+    console.log("File selected:", file.name);
+    // After a photo is selected, the page will now navigate to search.html
     window.location.href = 'search.html';
   }
 }
