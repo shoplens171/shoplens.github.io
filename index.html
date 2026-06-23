@@ -1,19 +1,3 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shoplens – Find Anything You See</title>
-
-  <link rel="stylesheet" href="style.css"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-</head>
-
-<body>
-
-<!-- ================= AUTH OVERLAY (UNCHANGED) ================= -->
 <div id="authOverlay" style="
   position: fixed;
   inset: 0;
@@ -32,9 +16,10 @@
     padding: 22px;
     border-radius: 16px;
     text-align: center;
+    animation: pop 0.3s ease;
   ">
 
-    <h2>Welcome to Shoplens</h2>
+    <h2 style="margin-bottom:8px;">Welcome to Shoplens</h2>
     <p style="color:#aaa;font-size:13px;">Login, Sign up or continue as guest</p>
 
     <input id="email" type="email" placeholder="Email"
@@ -43,102 +28,165 @@
     <input id="password" type="password" placeholder="Password"
       style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;">
 
-    <button onclick="login()" style="width:100%;padding:10px;margin-top:8px;background:#6366f1;color:white;border:none;border-radius:8px;">Login</button>
+    <button onclick="login()" style="
+      width:100%;padding:10px;margin-top:8px;
+      background:#6366f1;color:white;
+      border:none;border-radius:8px;
+    ">Login</button>
 
-    <button onclick="signup()" style="width:100%;padding:10px;margin-top:8px;background:#22c55e;color:white;border:none;border-radius:8px;">Sign Up</button>
+    <button onclick="signup()" style="
+      width:100%;padding:10px;margin-top:8px;
+      background:#22c55e;color:white;
+      border:none;border-radius:8px;
+    ">Sign Up</button>
 
-    <button onclick="guest()" style="width:100%;padding:10px;margin-top:8px;background:#444;color:white;border:none;border-radius:8px;">Continue as Guest</button>
+    <button onclick="guest()" style="
+      width:100%;padding:10px;margin-top:8px;
+      background:#444;color:white;
+      border:none;border-radius:8px;
+    ">Continue as Guest</button>
 
     <p id="msg" style="color:#aaa;font-size:12px;margin-top:10px;"></p>
+
   </div>
 </div>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shoplens – Find Anything You See</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+</head>
+  
 
-<!-- ================= YOUR ORIGINAL UI (UNCHANGED) ================= -->
+<body>
+  <div class="sparkle s1">✦</div>
+  <div class="sparkle s2">✦</div>
+  <div class="sparkle s3">+</div>
+  <div class="sparkle s4">✦</div>
 
-<div class="sparkle s1">✦</div>
-<div class="sparkle s2">✦</div>
-<div class="sparkle s3">+</div>
-<div class="sparkle s4">✦</div>
+  <nav class="navbar">
+    <div class="logo">shoplens</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="search.html" class="nav-link">AI Search</a>
+      <a href="trending.html" class="nav-link">Trending</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="assistant.html" class="nav-link">Assistant</a>
+    </div>
+   <div class="nav-right">
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
 
-<nav class="navbar">
-  <div class="logo">shoplens</div>
+  </nav>
 
-  <div class="nav-links">
-    <a href="index.html" class="nav-link active">Home</a>
-    <a href="search.html" class="nav-link">AI Search</a>
-    <a href="trending.html" class="nav-link">Trending</a>
-    <a href="about.html" class="nav-link">About</a>
-    <a href="assistant.html" class="nav-link">Assistant</a>
+  <section class="hero">
+    <div class="hero-left">
+      <h1 class="headline">
+        Find anything<br>you see<br>with <span class="ai-text">AI.</span>
+      </h1>
+      <p class="subtext">Upload a screenshot and let our vision engine identify the product, compare prices, and find where to buy it instantly.</p>
+      <div class="cta-card" id="scanTrigger" style="cursor: pointer;">
+  <div class="cta-icon">📷</div>
+  <div class="cta-words">
+    <strong>Get Started</strong>
+    <span>Upload a screenshot to find what you're looking for.</span>
   </div>
+  <div class="arrow">→</div>
+</div>
 
-  <div class="nav-right">
-    <button class="theme-btn" onclick="toggleTheme()">🌙</button>
-  </div>
-</nav>
+<input type="file" id="filePicker" accept="image/*" style="display: none;">
 
-<section class="hero">
 
-  <div class="hero-left">
-    <h1 class="headline">
-      Find anything<br>you see<br>with <span class="ai-text">AI.</span>
-    </h1>
-
-    <p class="subtext">
-      Upload a screenshot and let our vision engine identify the product.
-    </p>
-
-    <!-- SCAN BUTTON -->
-    <div class="cta-card" id="scanTrigger" style="cursor:pointer;">
-      <div class="cta-icon">📷</div>
-      <div class="cta-words">
-        <strong>Get Started</strong>
-        <span>Upload a screenshot to find what you're looking for.</span>
+      <div class="badges">
+        <span>🛡 Fast</span><span class="dot">•</span>
+        <span>🎯 Accurate</span><span class="dot">•</span>
+        <span>🔒 Private</span>
       </div>
-      <div class="arrow">→</div>
     </div>
-
-    <input type="file" id="filePicker" accept="image/*" style="display:none;">
-
-  </div>
-
-  <div class="hero-right">
-    <!-- your orb unchanged -->
-    <div class="orb-wrap">
-      <div class="orb"></div>
+    <div class="hero-right">
+      <div class="orb-wrap">
+        <div class="orb">
+          <div class="bubble b1"></div>
+          <div class="bubble b2"></div>
+          <div class="bubble b3"></div>
+          <div class="bubble b4"></div>
+          <div class="bubble b5"></div>
+          <div class="bubble b6"></div>
+          <div class="web w1"></div>
+          <div class="web w2"></div>
+          <div class="web w3"></div>
+          <div class="shine"></div>
+        </div>
+        <div class="ring-wrap">
+          <div class="orb-ring r1"></div>
+          <div class="orb-ring r2"></div>
+        </div>
+        <div class="gdot gd1"></div>
+        <div class="gdot gd2"></div>
+        <div class="gdot gd3"></div>
+        <div class="platform"></div>
+        <div class="plat-shadow"></div>
+      </div>
     </div>
-  </div>
+  </section>
 
-</section>
+  <section class="features">
+    <div class="feat">
+      <div class="feat-icon purple">🔍</div>
+      <h3>Identify</h3>
+      <p>AI detects products in your screenshot instantly.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon blue">🏷</div>
+      <h3>Compare</h3>
+      <p>We compare prices across multiple stores for you.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon green">🛍</div>
+      <h3>Buy</h3>
+      <p>Find the best deals and buy from trusted retailers.</p>
+    </div>
+  </section>
 
-<section class="features">
-  <div class="feat"><div class="feat-icon purple">🔍</div><h3>Identify</h3></div>
-  <div class="feat"><div class="feat-icon blue">🏷</div><h3>Compare</h3></div>
-  <div class="feat"><div class="feat-icon green">🛍</div><h3>Buy</h3></div>
-</section>
-
-<footer class="footer">
-  <p>Trusted by thousands of smart shoppers</p>
-</footer>
-
-<!-- ================= SCRIPTS (FIXED ORDER) ================= -->
-
+  <footer class="footer">
+    <div class="avatars">
+      <img src="https://i.pravatar.cc/40?img=1"/>
+      <img src="https://i.pravatar.cc/40?img=2"/>
+      <img src="https://i.pravatar.cc/40?img=3"/>
+      <img src="https://i.pravatar.cc/40?img=4"/>
+      <img src="https://i.pravatar.cc/40?img=5"/>
+    </div>
+    <p>Trusted by thousands of smart shoppers</p>
+    <span class="footer-link">🔒 shoplens171.github.io</span>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
 
 <script>
 const SUPABASE_URL = "https://udpfyqxmfbjndheshfme.supabase.co";
-const SUPABASE_KEY = "YOUR_ANON_KEY";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkcGZ5cXhtZmJqbmRoZXNoZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDY1NjMsImV4cCI6MjA5Nzc4MjU2M30.9g5CnbRzPPMXXucBgcl6CgIQOLH4d0Mp-HVp8zuC_uc";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ---------- AUTH ----------
+// ---------------- CHECK SESSION ----------------
 async function checkAuth() {
   const { data: { user } } = await client.auth.getUser();
-  if (user) hideOverlay();
+
+  if (user) {
+    hideOverlay();
+  }
 }
 
 checkAuth();
 
+// keep session alive on refresh
 client.auth.onAuthStateChange((event, session) => {
   if (session) hideOverlay();
 });
@@ -148,30 +196,44 @@ function hideOverlay() {
   if (overlay) overlay.style.display = "none";
 }
 
+// ---------------- LOGIN ----------------
 async function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const { error } = await client.auth.signInWithPassword({ email, password });
+  const { error } = await client.auth.signInWithPassword({
+    email,
+    password
+  });
 
-  document.getElementById("msg").innerText = error ? error.message : "";
+  if (error) {
+    document.getElementById("msg").innerText = error.message;
+  } else {
+    hideOverlay();
+  }
 }
 
+// ---------------- SIGNUP ----------------
 async function signup() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const { error } = await client.auth.signUp({ email, password });
+  const { error } = await client.auth.signUp({
+    email,
+    password
+  });
 
-  document.getElementById("msg").innerText =
-    error ? error.message : "Check email for verification";
+  if (error) {
+    document.getElementById("msg").innerText = error.message;
+  } else {
+    document.getElementById("msg").innerText =
+      "Signup successful! Check email if confirmation is enabled.";
+  }
 }
 
+// ---------------- GUEST ----------------
 function guest() {
   localStorage.setItem("guest", "true");
   hideOverlay();
 }
 </script>
-
-</body>
-</html>
