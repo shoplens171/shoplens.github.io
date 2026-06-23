@@ -1,14 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/auth-ui-web@latest"></script>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; }
+        #auth-container { width: 300px; }
+    </style>
+</head>
 <body>
-    <h1 id="status">Connecting to Database...</h1>
+
+    <div id="auth-container"></div>
+
     <script>
-        const SUPABASE_URL = 'https://udpfyqxmfbjndheshfme.supabase.co/rest/v1/';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkcGZ5cXhtZmJqbmRoZXNoZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDY1NjMsImV4cCI6MjA5Nzc4MjU2M30.9g5CnbRzPPMXXucBgcl6CgIQOLH4d0Mp-HVp8zuC_uc';
-        
-        // This line checks if the connection works
-        if (SUPABASE_URL.includes('your-project-id')) {
-            document.getElementById('status').innerText = "Error: Please update the URL in your code!";
-        } else {
-            document.getElementById('status').innerText = "Connected! If you see this, your keys are valid.";
-        }
+        const supabase = supabase.createClient('YOUR_ACTUAL_URL_HERE', 'YOUR_ACTUAL_KEY_HERE');
+
+        const ui = new supabase.AuthUI(supabase);
+        ui.render('#auth-container', {
+            providers: ['google'],
+            view: 'sign_up'
+        });
     </script>
 </body>
+</html>
