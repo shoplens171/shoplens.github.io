@@ -1,40 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Shoplens</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/auth-ui-web@latest"></script>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; }
-        #auth-container { width: 90%; max-width: 400px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    </style>
-</head>
 <body>
-
-<div id="auth-container"></div>
-
-<script>
-    // 1. Replace these with your actual keys from Supabase Settings -> API
-    const SUPABASE_URL = 'https://udpfyqxmfbjndheshfme.supabase.co/rest/v1/';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkcGZ5cXhtZmJqbmRoZXNoZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDY1NjMsImV4cCI6MjA5Nzc4MjU2M30.9g5CnbRzPPMXXucBgcl6CgIQOLH4d0Mp-HVp8zuC_uc';
-    
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // 2. This creates the login box automatically
-    const ui = new supabase.AuthUI(supabase);
-    ui.render('#auth-container', {
-        providers: ['google'], // Enables Google Login
-        view: 'sign_up' 
-    });
-
-    // 3. Send the user to your search page after they log in
-    supabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_IN') {
-            window.location.href = 'search.html';
+    <h1 id="status">Connecting to Database...</h1>
+    <script>
+        const SUPABASE_URL = 'YOUR_ACTUAL_URL_HERE';
+        const SUPABASE_ANON_KEY = 'YOUR_ACTUAL_KEY_HERE';
+        
+        // This line checks if the connection works
+        if (SUPABASE_URL.includes('your-project-id')) {
+            document.getElementById('status').innerText = "Error: Please update the URL in your code!";
+        } else {
+            document.getElementById('status').innerText = "Connected! If you see this, your keys are valid.";
         }
-    });
-</script>
+    </script>
 </body>
-</html>
