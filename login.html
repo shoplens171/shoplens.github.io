@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login - Shoplens</title>
+  <title>Shoplens Login</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -15,6 +15,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
 
     .box {
@@ -24,12 +25,18 @@
       border-radius: 12px;
     }
 
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
     input {
       width: 100%;
       padding: 10px;
       margin: 8px 0;
       border-radius: 8px;
       border: none;
+      outline: none;
     }
 
     button {
@@ -41,12 +48,18 @@
       background: #6366f1;
       color: white;
       cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #4f46e5;
     }
 
     .msg {
       margin-top: 10px;
       font-size: 14px;
       color: #aaa;
+      text-align: center;
     }
   </style>
 </head>
@@ -66,15 +79,22 @@
 </div>
 
 <script>
-  // 🔥 IMPORTANT: Replace with your own keys
-  const SUPABASE_URL = "YOUR_SUPABASE_URL";
-  const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
+  // ✅ SUPABASE CONFIG (YOUR DATA)
+  const SUPABASE_URL = "https://udpfyqxmfbjndheshfme.supabase.co";
 
-  const client = supabase.createClient(https://udpfyqxmfbjndheshfme.supabase.co/rest/v1/, sb_publishable_iLqTjOMJLWp4Utqz1eN52g_SBGzQcmv);
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkcGZ5cXhtZmJqbmRoZXNoZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDY1NjMsImV4cCI6MjA5Nzc4MjU2M30.9g5CnbRzPPMXXucBgcl6CgIQOLH4d0Mp-HVp8zuC_uc";
 
+  const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // ---------------- SIGN UP ----------------
   async function signUp() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!email || !password) {
+      document.getElementById("msg").innerText = "Please fill all fields";
+      return;
+    }
 
     const { data, error } = await client.auth.signUp({
       email,
@@ -84,13 +104,20 @@
     if (error) {
       document.getElementById("msg").innerText = error.message;
     } else {
-      document.getElementById("msg").innerText = "Signup successful! Check email.";
+      document.getElementById("msg").innerText =
+        "Signup successful! Check email (if confirmation is enabled).";
     }
   }
 
+  // ---------------- LOGIN ----------------
   async function signIn() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!email || !password) {
+      document.getElementById("msg").innerText = "Please fill all fields";
+      return;
+    }
 
     const { data, error } = await client.auth.signInWithPassword({
       email,
@@ -101,8 +128,12 @@
       document.getElementById("msg").innerText = error.message;
     } else {
       document.getElementById("msg").innerText = "Login successful!";
+
       localStorage.setItem("user", email);
-      window.location.href = "index.html";
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 800);
     }
   }
 </script>
