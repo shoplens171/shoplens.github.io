@@ -1,11 +1,10 @@
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  
+  if (req.method !== 'POST') return res.status(405).end();
   const { query } = req.body;
   const { GROQ_API_KEY, SERPAPI_KEY } = process.env;
 
   try {
-    // AI Logic: Fetch products with search-based URL instruction
+    // 1. Get Product Data
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
@@ -14,9 +13,7 @@ export default async function handler(req, res) {
         response_format: { type: "json_object" },
         messages: [{
           role: "system", 
-          content: `You are an Indian shopping assistant. Return JSON with 'results' array (4 products). 
-          Each product: name, description, rating, price (formatted in ₹), status (safe/caution/scam), reason. 
-          For the 'url' field, provide a functional Amazon India search link: https://www.amazon.in/s?k=PRODUCT_NAME_HERE`
+          content: "Return JSON with 'results' array of 4 products. Fields: name, description, rating, price, status, reason."
         }, {
           role: "user",
           content: `Search for: ${query} in India`
@@ -27,22 +24,22 @@ export default async function handler(req, res) {
     const groqData = await groqRes.json();
     let products = JSON.parse(groqData.choices[0].message.content).results;
 
-    // Map products and sanitize the URL with the actual product name
-    const finalResults = products.map(p => ({
-      ...p,
-      url: `https://www.amazon.in/s?k=${encodeURIComponent(p.name)}`
-    }));
-
-    // Image Logic: Fetch images for India region
-    const resultsWithImages = await Promise.all(finalResults.map(async (p) => {
+    // 2. Fetch both Image AND Direct Product Link using SerpAPI
+    const finalResults = await Promise.all(products.map(async (p) => {
       try {
-        const serpRes = await fetch(`https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(p.name)}&api_key=${SERPAPI_KEY}&gl=in&location=India&hl=en`);
+        // Search Google for the product to get the direct Amazon link
+        const serpRes = await fetch(`https://serpapi.com/search.json?engine=google&q=${encodeURIComponent(p.name + " amazon india")}&api_key=${SERPAPI_KEY}&gl=in&location=India&hl=en`);
         const data = await serpRes.json();
-        return { ...p, image: data.images_results?.[0]?.original || "" };
-      } catch (e) { return { ...p, image: "" }; }
+        
+        // Grab the first organic link (the direct product page) and the first image
+        const directUrl = data.organic_results?.[0]?.link || `https://www.amazon.in/s?k=${encodeURIComponent(p.name)}`;
+        const imageUrl = data.inline_images?.[0]?.original || ""; 
+
+        return { ...p, url: directUrl, image: imageUrl };
+      } catch (e) { return { ...p, url: "#", image: "" }; }
     }));
 
-    res.status(200).json({ results: resultsWithImages });
+    res.status(200).json({ results: finalResults });
   } catch (error) {
     res.status(500).json({ error: "Search failed" });
   }
