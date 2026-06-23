@@ -4,40 +4,83 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Shoplens AI Search</title>
+
   <link rel="stylesheet" href="style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
   <style>
-    /* Premium UI Styling */
     body { font-family: 'DM Sans', sans-serif; background-color: #fafafa; color: #333; }
     h1, h3 { font-family: 'Syne', sans-serif; }
-    
-    .tag-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 25px 0; }
-    .tag { 
-      background: #ffffff; padding: 10px 20px; border-radius: 50px; 
-      cursor: pointer; font-size: 0.85rem; font-weight: 500; 
-      border: 1px solid #e0e0e0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 25px 0;
+    }
+
+    .tag {
+      background: #ffffff;
+      padding: 10px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: 1px solid #e0e0e0;
+      transition: all 0.3s ease;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .tag:hover { background: #6366f1; color: white; border-color: #6366f1; transform: translateY(-2px); }
-    
-    .result-card { 
-      background: white; border: none; padding: 24px; margin: 20px 0; 
-      border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+
+    .tag:hover {
+      background: #6366f1;
+      color: white;
+      border-color: #6366f1;
+      transform: translateY(-2px);
     }
-    
+
+    .result-card {
+      background: white;
+      border: none;
+      padding: 24px;
+      margin: 20px 0;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+
     .img-frame {
-      width: 100%; height: 300px; background: #fdfdfd;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 12px; margin-bottom: 20px; border: 1px solid #f0f0f0;
+      width: 100%;
+      height: 300px;
+      background: #fdfdfd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #f0f0f0;
     }
-    .product-img { max-width: 100%; max-height: 100%; object-fit: contain; }
-    .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+
+    .product-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .badge {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
   </style>
 </head>
+
 <body>
 
   <nav class="navbar">
     <div class="logo">shoplens</div>
+
     <div class="nav-links">
       <a href="index.html" class="nav-link">Home</a>
       <a href="search.html" class="nav-link active">AI Search</a>
@@ -45,8 +88,10 @@
       <a href="about.html" class="nav-link">About</a>
       <a href="assistant.html" class="nav-link">Assistant</a>
     </div>
+
     <div class="nav-right">
-      <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+      <!-- FIXED: removed onclick -->
+      <button class="theme-btn">🌙</button>
     </div>
   </nav>
 
@@ -81,6 +126,7 @@
     async function doSearch() {
       const query = document.getElementById('searchInput').value.trim();
       if (!query) return;
+
       const grid = document.getElementById('resultsGrid');
       grid.innerHTML = '<p style="text-align:center; padding:40px;">🔍 Analyzing Indian market...</p>';
 
@@ -90,20 +136,32 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query })
         });
+
         const data = await res.json();
-        
+
         grid.innerHTML = data.results.map(r => `
           <div class="result-card">
             ${r.image ? `<div class="img-frame"><img src="${r.image}" class="product-img"></div>` : ''}
             <h3>${r.name}</h3>
             <p style="color:#666; line-height:1.6;">${r.description}</p>
+
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
-               <p><strong>${r.price}</strong> | ⭐ ${r.rating}</p>
-               <span class="badge" style="background:${r.status === 'scam' ? '#ffebee' : '#e8f5e9'}; color:${r.status === 'scam' ? '#c62828' : '#2e7d32'}">${r.status.toUpperCase()}</span>
+              <p><strong>${r.price}</strong> | ⭐ ${r.rating}</p>
+
+              <span class="badge"
+                style="background:${r.status === 'scam' ? '#ffebee' : '#e8f5e9'};
+                color:${r.status === 'scam' ? '#c62828' : '#2e7d32'}">
+                ${r.status.toUpperCase()}
+              </span>
             </div>
-            <a href="${r.url}" target="_blank" style="display:inline-block; margin-top:15px; color:#6366f1; font-weight:bold;">Visit Store →</a>
+
+            <a href="${r.url}" target="_blank"
+               style="display:inline-block; margin-top:15px; color:#6366f1; font-weight:bold;">
+              Visit Store →
+            </a>
           </div>
         `).join('');
+
       } catch (e) {
         grid.innerHTML = '<p style="text-align:center; padding:40px;">❌ Error. Please check API keys.</p>';
       }
