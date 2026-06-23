@@ -2,24 +2,31 @@
 <html>
 <head>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/auth-ui-web@latest"></script>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; }
-        #auth-container { width: 300px; }
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px; }
+        input { margin: 10px; padding: 10px; width: 250px; }
+        button { padding: 10px 20px; background: blue; color: white; border: none; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <div id="auth-container"></div>
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="signUp()">Sign Up</button>
 
     <script>
-        const supabase = supabase.createClient('https://udpfyqxmfbjndheshfme.supabase.co/rest/v1/', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkcGZ5cXhtZmJqbmRoZXNoZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDY1NjMsImV4cCI6MjA5Nzc4MjU2M30.9g5CnbRzPPMXXucBgcl6CgIQOLH4d0Mp-HVp8zuC_uc');
+        const supabase = supabase.createClient('YOUR_ACTUAL_URL_HERE', 'YOUR_ACTUAL_KEY_HERE');
 
-        const ui = new supabase.AuthUI(supabase);
-        ui.render('#auth-container', {
-            providers: ['google'],
-            view: 'sign_up'
-        });
+        async function signUp() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const { data, error } = await supabase.auth.signUp({ email, password });
+            
+            if (error) alert(error.message);
+            else alert("Check your email for confirmation!");
+        }
     </script>
 </body>
 </html>
