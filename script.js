@@ -63,33 +63,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Handle the file selection
         picker.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+    const file = e.target.files[0];
+    if (!file) return;
 
-            alert("Analyzing your product... (Please wait)");
+    alert("Compressing and Analyzing...");
 
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = async () => {
-                try {
-                    const response = await fetch('/api/scan', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ image: reader.result })
-                    });
-                    
-                    const data = await response.json();
-                    if (response.ok) {
-                        alert("Success: " + data.product_name + "\nPrice: " + data.price);
-                    } else {
-                        throw new Error(data.error || "Server Error");
-                    }
-                } catch (err) {
-                    alert("Scan failed: " + err.message);
-                }
-            };
-        });
-    } else {
-        console.error("Critical Error: scanTrigger or filePicker not found!");
-    }
+    // Create an image object to resize
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    
+    img.onload = async () => {
+        const canvas = document.createElement('canvas');
+        const maxSize = 800; // Resize to max 800px width
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+            if (width > maxSize) { height *= maxSize / width; width = maxSize; }
+        } else {
+            if (height > maxSize) { width *= maxSize / height; height = maxSize; }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        
+        // Convert to small JPEG (0.7 quality)
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+        try {
+            const response = await fetch('/api/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: compressedBase64 })
+            });
+            
+            const data = await response.json();
+            if (response.ok) {
+                alert("Found: " + data.product_name + "\nPrice: " + data.price);
+            } else {
+                alert("Server Error: " + data.error);
+            }
+        } catch (err) {
+            alert("Connection error: " + err.message);
+        }
+    };
 });
