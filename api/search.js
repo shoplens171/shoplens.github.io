@@ -8,7 +8,9 @@ export default async function handler(req, res) {
     const serpRes = await fetch(`https://serpapi.com/search.json?engine=google_shopping&q=${encodeURIComponent(query)}&api_key=${SERPAPI_KEY}&gl=in&location=India&hl=en`);
     const data = await serpRes.json();
     
-    if (!data.shopping_results) return res.status(404).json({ results: [] });
+    if (!data.shopping_results || data.shopping_results.length === 0) {
+      return res.status(404).json({ results: [] });
+    }
 
     const finalResults = data.shopping_results.slice(0, 4).map(p => ({
       name: p.title,
@@ -16,14 +18,13 @@ export default async function handler(req, res) {
       rating: p.rating || "N/A",
       price: p.price || "Check site",
       status: "SAFE",
-      // Use the direct link provided by the API. 
-      // If the API link causes a 404, the retailer's own page might be down.
-      url: p.link, 
+      // Prioritize product_link; fallback to a clean Google search for the product
+      url: p.product_link || `https://www.google.com/search?q=${encodeURIComponent(p.title + " " + (p.source || "India"))}`,
       image: p.thumbnail
     }));
 
     res.status(200).json({ results: finalResults });
   } catch (error) {
-    res.status(500).json({ error: "Search failed" });
+    res.status(500).json({ error: "Shopping search failed" });
   }
 }
