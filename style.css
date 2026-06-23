@@ -689,3 +689,7 @@ min-width:250px;
 max-width:250px;
 flex-shrink:0;
 }
+@keyframes pop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
