@@ -73,28 +73,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 2. Process image when file is selected
-  if (filePicker) {
+    if (filePicker) {
     filePicker.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
 
-      alert("Analyzing your product...");
+      alert("Analyzing... (Wait 5-10 seconds)");
+
       const reader = new FileReader();
       reader.readAsDataURL(file);
       
       reader.onloadend = async () => {
         try {
+          // Add a timeout to the fetch
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 10000);
+
           const response = await fetch('/api/scan', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: reader.result })
+            body: JSON.stringify({ image: reader.result }),
+            signal: controller.signal
           });
+
+          clearTimeout(timeout);
+
           const data = await response.json();
-          alert("Found: " + data.product_name + "\nPrice: " + data.price);
+          alert("Success: " + data.product_name);
         } catch (err) {
-          alert("Scan failed. Please check your internet connection.");
+          if (err.name === 'AbortError') {
+            alert("Error: The server took too long to respond. Check Vercel logs.");
+          } else {
+            alert("Error: " + err.message);
+          }
         }
       };
     });
   }
-});
