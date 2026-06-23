@@ -78,6 +78,7 @@
 
 <body>
 
+  <!-- NAVBAR (UNCHANGED) -->
   <nav class="navbar">
     <div class="logo">shoplens</div>
 
@@ -90,16 +91,18 @@
     </div>
 
     <div class="nav-right">
-      <!-- FIXED: removed onclick -->
+      <!-- FIX: removed onclick -->
       <button class="theme-btn">🌙</button>
     </div>
   </nav>
 
+  <!-- HERO (UNCHANGED) -->
   <div class="page-hero" style="text-align:center; padding: 40px 20px;">
     <h1>Shoplens <span style="color:#6366f1">AI</span></h1>
     <p>Search Indian products and check safety instantly.</p>
   </div>
 
+  <!-- SEARCH (UNCHANGED) -->
   <div class="search-box">
     <div class="search-input-wrap">
       <input class="search-input" id="searchInput" placeholder="e.g. best skincare products..." />
@@ -107,6 +110,7 @@
     </div>
   </div>
 
+  <!-- TAGS (UNCHANGED) -->
   <div class="tag-container">
     <span class="tag" onclick="quickSearch('best skincare products India')">✨ Skincare</span>
     <span class="tag" onclick="quickSearch('best budget smartphones India')">📱 Mobiles</span>
@@ -115,8 +119,10 @@
     <span class="tag" onclick="quickSearch('best running shoes India')">👟 Running Shoes</span>
   </div>
 
+  <!-- RESULTS -->
   <div class="results-grid" id="resultsGrid" style="max-width: 800px; margin: 0 auto;"></div>
 
+  <!-- YOUR ORIGINAL SEARCH JS (UNCHANGED) -->
   <script>
     function quickSearch(q) {
       document.getElementById('searchInput').value = q;
@@ -167,5 +173,9 @@
       }
     }
   </script>
+
+  <!-- ✅ FIXED THEME SYSTEM (THIS IS WHAT WAS MISSING) -->
+  <script src="script.js"></script>
+
 </body>
 </html>
