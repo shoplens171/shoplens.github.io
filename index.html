@@ -1,3 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shoplens – Find Anything You See</title>
+
+  <link rel="stylesheet" href="style.css"/>
+
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Supabase (MUST BE BEFORE JS) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<!-- ================= LOGIN OVERLAY ================= -->
 <div id="authOverlay" style="
   position: fixed;
   inset: 0;
@@ -16,11 +34,10 @@
     padding: 22px;
     border-radius: 16px;
     text-align: center;
-    animation: pop 0.3s ease;
   ">
 
-    <h2 style="margin-bottom:8px;">Welcome to Shoplens</h2>
-    <p style="color:#aaa;font-size:13px;">Login, Sign up or continue as guest</p>
+    <h2>Welcome to Shoplens</h2>
+    <p style="color:#aaa;font-size:13px;">Login / Signup / Guest</p>
 
     <input id="email" type="email" placeholder="Email"
       style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;">
@@ -28,140 +45,50 @@
     <input id="password" type="password" placeholder="Password"
       style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;">
 
-    <button onclick="login()" style="
-      width:100%;padding:10px;margin-top:8px;
-      background:#6366f1;color:white;
-      border:none;border-radius:8px;
-    ">Login</button>
+    <button onclick="login()" style="width:100%;padding:10px;margin-top:8px;background:#6366f1;color:white;border:none;border-radius:8px;">
+      Login
+    </button>
 
-    <button onclick="signup()" style="
-      width:100%;padding:10px;margin-top:8px;
-      background:#22c55e;color:white;
-      border:none;border-radius:8px;
-    ">Sign Up</button>
+    <button onclick="signup()" style="width:100%;padding:10px;margin-top:8px;background:#22c55e;color:white;border:none;border-radius:8px;">
+      Sign Up
+    </button>
 
-    <button onclick="guest()" style="
-      width:100%;padding:10px;margin-top:8px;
-      background:#444;color:white;
-      border:none;border-radius:8px;
-    ">Continue as Guest</button>
+    <button onclick="guest()" style="width:100%;padding:10px;margin-top:8px;background:#444;color:white;border:none;border-radius:8px;">
+      Continue as Guest
+    </button>
 
     <p id="msg" style="color:#aaa;font-size:12px;margin-top:10px;"></p>
-
   </div>
 </div>
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shoplens – Find Anything You See</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-</head>
-<body>
-  <div class="sparkle s1">✦</div>
-  <div class="sparkle s2">✦</div>
-  <div class="sparkle s3">+</div>
-  <div class="sparkle s4">✦</div>
 
-  <nav class="navbar">
-    <div class="logo">shoplens</div>
-    <div class="nav-links">
-      <a href="index.html" class="nav-link active">Home</a>
-      <a href="search.html" class="nav-link">AI Search</a>
-      <a href="trending.html" class="nav-link">Trending</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="assistant.html" class="nav-link">Assistant</a>
-    </div>
-   <div class="nav-right">
-  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
-</div>
+<!-- ================= MAIN WEBSITE ================= -->
 
-  </nav>
+<nav class="navbar">
+  <div class="logo">shoplens</div>
 
-  <section class="hero">
-    <div class="hero-left">
-      <h1 class="headline">
-        Find anything<br>you see<br>with <span class="ai-text">AI.</span>
-      </h1>
-      <p class="subtext">Upload a screenshot and let our vision engine identify the product, compare prices, and find where to buy it instantly.</p>
-      <div class="cta-card">
-        <div class="cta-icon">📷</div>
-        <div class="cta-words">
-          <strong>Get Started</strong>
-          <span>Upload a screenshot to find what you're looking for.</span>
-        </div>
-        <button class="arrow">→</button>
-      </div>
-      <div class="badges">
-        <span>🛡 Fast</span><span class="dot">•</span>
-        <span>🎯 Accurate</span><span class="dot">•</span>
-        <span>🔒 Private</span>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="orb-wrap">
-        <div class="orb">
-          <div class="bubble b1"></div>
-          <div class="bubble b2"></div>
-          <div class="bubble b3"></div>
-          <div class="bubble b4"></div>
-          <div class="bubble b5"></div>
-          <div class="bubble b6"></div>
-          <div class="web w1"></div>
-          <div class="web w2"></div>
-          <div class="web w3"></div>
-          <div class="shine"></div>
-        </div>
-        <div class="ring-wrap">
-          <div class="orb-ring r1"></div>
-          <div class="orb-ring r2"></div>
-        </div>
-        <div class="gdot gd1"></div>
-        <div class="gdot gd2"></div>
-        <div class="gdot gd3"></div>
-        <div class="platform"></div>
-        <div class="plat-shadow"></div>
-      </div>
-    </div>
-  </section>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link active">Home</a>
+    <a href="search.html" class="nav-link">AI Search</a>
+    <a href="trending.html" class="nav-link">Trending</a>
+    <a href="about.html" class="nav-link">About</a>
+    <a href="assistant.html" class="nav-link">Assistant</a>
+  </div>
 
-  <section class="features">
-    <div class="feat">
-      <div class="feat-icon purple">🔍</div>
-      <h3>Identify</h3>
-      <p>AI detects products in your screenshot instantly.</p>
-    </div>
-    <div class="feat">
-      <div class="feat-icon blue">🏷</div>
-      <h3>Compare</h3>
-      <p>We compare prices across multiple stores for you.</p>
-    </div>
-    <div class="feat">
-      <div class="feat-icon green">🛍</div>
-      <h3>Buy</h3>
-      <p>Find the best deals and buy from trusted retailers.</p>
-    </div>
-  </section>
+  <div class="nav-right">
+    <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+  </div>
+</nav>
 
-  <footer class="footer">
-    <div class="avatars">
-      <img src="https://i.pravatar.cc/40?img=1"/>
-      <img src="https://i.pravatar.cc/40?img=2"/>
-      <img src="https://i.pravatar.cc/40?img=3"/>
-      <img src="https://i.pravatar.cc/40?img=4"/>
-      <img src="https://i.pravatar.cc/40?img=5"/>
-    </div>
-    <p>Trusted by thousands of smart shoppers</p>
-    <span class="footer-link">🔒 shoplens171.github.io</span>
-  </footer>
-  <script src="script.js"></script>
-</body>
-</html>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<section class="hero">
+  <h1>Find anything you see with AI</h1>
+  <p>Upload screenshots & get instant product matches</p>
+
+  <div class="cta-card">
+    <strong>Get Started</strong>
+  </div>
+</section>
+
+<!-- ================= SCRIPTS ================= -->
 
 <script>
 const SUPABASE_URL = "https://udpfyqxmfbjndheshfme.supabase.co";
@@ -169,25 +96,20 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ---------------- CHECK SESSION ----------------
+// ---------------- AUTH CHECK ----------------
 async function checkAuth() {
   const { data: { user } } = await client.auth.getUser();
-
-  if (user) {
-    hideOverlay();
-  }
+  if (user) hideOverlay();
 }
 
 checkAuth();
 
-// keep session alive on refresh
 client.auth.onAuthStateChange((event, session) => {
   if (session) hideOverlay();
 });
 
 function hideOverlay() {
-  const overlay = document.getElementById("authOverlay");
-  if (overlay) overlay.style.display = "none";
+  document.getElementById("authOverlay").style.display = "none";
 }
 
 // ---------------- LOGIN ----------------
@@ -195,16 +117,12 @@ async function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const { error } = await client.auth.signInWithPassword({
-    email,
-    password
-  });
+  const { error } = await client.auth.signInWithPassword({ email, password });
 
-  if (error) {
-    document.getElementById("msg").innerText = error.message;
-  } else {
-    hideOverlay();
-  }
+  document.getElementById("msg").innerText =
+    error ? error.message : "Login successful!";
+
+  if (!error) hideOverlay();
 }
 
 // ---------------- SIGNUP ----------------
@@ -212,17 +130,10 @@ async function signup() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const { error } = await client.auth.signUp({
-    email,
-    password
-  });
+  const { error } = await client.auth.signUp({ email, password });
 
-  if (error) {
-    document.getElementById("msg").innerText = error.message;
-  } else {
-    document.getElementById("msg").innerText =
-      "Signup successful! Check email if confirmation is enabled.";
-  }
+  document.getElementById("msg").innerText =
+    error ? error.message : "Signup successful! Check email.";
 }
 
 // ---------------- GUEST ----------------
@@ -231,3 +142,6 @@ function guest() {
   hideOverlay();
 }
 </script>
+
+</body>
+</html>
