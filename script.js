@@ -58,37 +58,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         picker.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+    const file = e.target.files[0];
+    if (!file) return;
 
-            // Simple 4MB safety check
-            if (file.size > 4000000) {
-                alert("File too large. Please use a smaller screenshot.");
-                return;
+    if (file.size > 4000000) {
+        alert("File too large");
+        return;
+    }
+
+    // ✅ REAL LOADING UI (not alert)
+    const loader = document.createElement("div");
+    loader.id = "loader";
+    loader.innerHTML = "🔍 Analyzing your product...";
+    loader.style.cssText = `
+        position:fixed;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        background:#111;
+        color:#fff;
+        padding:15px 25px;
+        border-radius:10px;
+        z-index:999999;
+    `;
+    document.body.appendChild(loader);
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onloadend = async () => {
+        try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 30000);
+
+            const response = await fetch('/api/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: reader.result }),
+                signal: controller.signal
+            });
+
+            clearTimeout(timeout);
+
+            const data = await response.json();
+
+            document.getElementById("loader")?.remove();
+
+            if (response.ok) {
+                alert("Found: " + data.product_name);
+            } else {
+                alert("Error: " + data.error);
             }
 
-            alert("Analyzing your product...");
-
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = async () => {
-                try {
-                    const response = await fetch('/api/scan', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ image: reader.result })
-                    });
-                    
-                    const data = await response.json();
-                    if (response.ok) {
-                        alert("Found: " + data.product_name + "\nPrice: " + (data.price || "Check link"));
-                    } else {
-                        alert("Server error: " + (data.error || "Unknown"));
-                    }
-                } catch (err) {
-                    alert("Scan failed. Check your internet.");
-                }
-            };
-        });
-    }
+        } catch (err) {
+            document.getElementById("loader")?.remove();
+            alert("Scan failed or timed out. Try again.");
+        }
+    };
 });
