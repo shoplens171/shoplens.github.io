@@ -54,13 +54,14 @@
         const results = data.results; 
 
         grid.innerHTML = results.map(r => `
-          <div class="result-card">
-            <h3>${r.name}</h3>
-            <p>${r.description}</p>
-            <p>⭐ ${r.rating} • ${r.price}</p>
-            <span class="result-badge">${r.status}</span>
-          </div>
-        `).join('');
+  <div class="result-card">
+    ${r.image ? `<img src="${r.image}" alt="${r.name}" style="width:100%; border-radius:8px;">` : ''}
+    <h3>${r.name}</h3>
+    <p>${r.description}</p>
+    <p style="margin-top:8px;font-size:0.8rem;color:var(--purple)">⭐ ${r.rating} • ${r.price}</p>
+  </div>
+`).join('');
+
       } catch (e) {
         grid.innerHTML = '<p style="text-align:center;padding:40px">❌ Search unavailable. Check your connection.</p>';
       }
