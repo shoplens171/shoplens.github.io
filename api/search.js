@@ -12,11 +12,12 @@ export default async function handler(req, res) {
 
     const finalResults = data.shopping_results.slice(0, 4).map(p => ({
       name: p.title,
-      description: p.snippet || "No description available",
+      // FIX: If the snippet is missing, use a dynamic fallback including the store name
+      description: p.snippet || `${p.source || 'Verified'} listing | ${p.price || 'Check details'}`,
       rating: p.rating || "N/A",
       price: p.price || "Check site",
       status: "SAFE",
-      // "btnI=I" forces Google to jump to the first search result automatically
+      // Keep btnI=I to trigger the Google Redirect/Trust notice
       url: `https://www.google.com/search?q=${encodeURIComponent(p.title + " " + (p.source || "Amazon"))}&btnI=I`,
       image: p.thumbnail
     }));
