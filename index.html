@@ -161,3 +161,73 @@
   <script src="script.js"></script>
 </body>
 </html>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://udpfyqxmfbjndheshfme.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkcGZ5cXhtZmJqbmRoZXNoZm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDY1NjMsImV4cCI6MjA5Nzc4MjU2M30.9g5CnbRzPPMXXucBgcl6CgIQOLH4d0Mp-HVp8zuC_uc";
+
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ---------------- CHECK SESSION ----------------
+async function checkAuth() {
+  const { data: { user } } = await client.auth.getUser();
+
+  if (user) {
+    hideOverlay();
+  }
+}
+
+checkAuth();
+
+// keep session alive on refresh
+client.auth.onAuthStateChange((event, session) => {
+  if (session) hideOverlay();
+});
+
+function hideOverlay() {
+  const overlay = document.getElementById("authOverlay");
+  if (overlay) overlay.style.display = "none";
+}
+
+// ---------------- LOGIN ----------------
+async function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error } = await client.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    document.getElementById("msg").innerText = error.message;
+  } else {
+    hideOverlay();
+  }
+}
+
+// ---------------- SIGNUP ----------------
+async function signup() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error } = await client.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+    document.getElementById("msg").innerText = error.message;
+  } else {
+    document.getElementById("msg").innerText =
+      "Signup successful! Check email if confirmation is enabled.";
+  }
+}
+
+// ---------------- GUEST ----------------
+function guest() {
+  localStorage.setItem("guest", "true");
+  hideOverlay();
+}
+</script>
