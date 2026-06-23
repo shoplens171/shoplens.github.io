@@ -1,22 +1,34 @@
+// Function to handle theme switching
 function toggleTheme() {
   const html = document.documentElement;
   const btn = document.querySelector('.theme-btn');
-  if (html.getAttribute('data-theme') === 'light') {
-    html.setAttribute('data-theme', 'dark');
-    if (btn) btn.textContent = '☀️';
-    localStorage.setItem('theme', 'dark');
-  } else {
-    html.setAttribute('data-theme', 'light');
-    if (btn) btn.textContent = '🌙';
-    localStorage.setItem('theme', 'light');
-  }
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  
+  const newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  
+  if (btn) btn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', newTheme);
 }
 
+// Initialize theme on load
 const savedTheme = localStorage.getItem('theme') || 'light';
 document.documentElement.setAttribute('data-theme', savedTheme);
-const themeBtn = document.querySelector('.theme-btn');
-if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
 
+// Attach event listeners to the theme button
+const themeBtn = document.querySelector('.theme-btn');
+if (themeBtn) {
+  themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  // Standard click
+  themeBtn.addEventListener('click', toggleTheme);
+  // Mobile Safari touch fix (prevents tap-delay issues)
+  themeBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault(); 
+    toggleTheme();
+  }, { passive: false });
+}
+
+// Animation observer for cards
 const cards = document.querySelectorAll('.feat, .result-card, .trend-card, .about-card');
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry, i) => {
@@ -37,6 +49,7 @@ cards.forEach(card => {
   observer.observe(card);
 });
 
+// CTA and Nav Button listeners
 const cta = document.querySelector('.cta-card');
 if (cta) cta.addEventListener('click', () => window.location.href = 'search.html');
 const navBtn = document.querySelector('.nav-btn');
