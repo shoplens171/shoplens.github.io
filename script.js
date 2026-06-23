@@ -1,28 +1,43 @@
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  
-  const { query } = req.body;
-  const { SERPAPI_KEY } = process.env;
-
-  try {
-    const serpRes = await fetch(`https://serpapi.com/search.json?engine=google_shopping&q=${encodeURIComponent(query)}&api_key=${SERPAPI_KEY}&gl=in&location=India&hl=en`);
-    const data = await serpRes.json();
-    
-    if (!data.shopping_results) return res.status(404).json({ results: [] });
-
-    const finalResults = data.shopping_results.slice(0, 4).map(p => ({
-      name: p.title,
-      // Keep original snippet, but clean it up if it's too long
-      description: p.snippet || "Explore this product on the official store for full specifications.",
-      rating: p.rating || "N/A",
-      price: p.price || "Check site",
-      status: "SAFE",
-      url: p.product_link || p.link,
-      image: p.thumbnail
-    }));
-
-    res.status(200).json({ results: finalResults });
-  } catch (error) {
-    res.status(500).json({ error: "Search failed" });
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.querySelector('.theme-btn');
+  if (html.getAttribute('data-theme') === 'light') {
+    html.setAttribute('data-theme', 'dark');
+    if (btn) btn.textContent = '☀️';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    html.setAttribute('data-theme', 'light');
+    if (btn) btn.textContent = '🌙';
+    localStorage.setItem('theme', 'light');
   }
 }
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+const themeBtn = document.querySelector('.theme-btn');
+if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+const cards = document.querySelectorAll('.feat, .result-card, .trend-card, .about-card');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }, i * 100);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+cards.forEach(card => {
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(24px)';
+  card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(card);
+});
+
+const cta = document.querySelector('.cta-card');
+if (cta) cta.addEventListener('click', () => window.location.href = 'search.html');
+const navBtn = document.querySelector('.nav-btn');
+if (navBtn) navBtn.addEventListener('click', () => window.location.href = 'search.html');
