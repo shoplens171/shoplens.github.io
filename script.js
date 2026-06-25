@@ -210,6 +210,25 @@ Visit Store →
 
 </div>
 `;
+  const alternativesHtml =
+(data.alternatives || [])
+.map(item => `
+<div class="alt-card">
+<img src="${item.thumbnail}">
+<h4>${item.title}</h4>
+<p>${item.price || "N/A"}</p>
+</div>
+`).join("");
+
+resultBox.innerHTML += `
+<h3 class="alt-title">
+Similar Products
+</h3>
+
+<div class="alt-grid">
+${alternativesHtml}
+</div>
+`;               
 
 } else {
     alert("Error: " + (data.error || "Scan failed"));
