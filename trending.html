@@ -37,45 +37,36 @@
 
   <script src="script.js"></script>
 
-   <script>
-<script>
+ <script>
 async function loadTrending() {
-
-  const grid = document.getElementById("trendingGrid");
-
-  grid.innerHTML = `
-    <div style="
-      text-align:center;
-      padding:60px;
-      font-size:20px;
-      font-weight:700;
-    ">
-      🔥 Loading Trending Products...
-    </div>
-  `;
 
   try {
 
-    const res = await fetch("/api/trending");
-    const data = await res.json();
+    const response = await fetch("/api/trending");
+    const data = await response.json();
 
-    grid.innerHTML = "";
+    const categories = data.categories || [];
 
-    data.categories.forEach(category => {
+    const map = {
+      Clothing: "clothing",
+      Shoes: "shoes",
+      "Beauty Products": "beauty",
+      Accessories: "accessories",
+      Gadgets: "gadgets"
+    };
 
-      let html = `
-        <section class="trend-section">
+    categories.forEach(category => {
 
-          <h2>
-            ${category.title}
-          </h2>
+      const container =
+        document.getElementById(
+          map[category.title]
+        );
 
-          <div class="trend-row">
-      `;
+      if (!container) return;
 
-      category.products.forEach(product => {
+      container.innerHTML =
+        category.products.map(product => `
 
-        html += `
           <div class="trend-card premium-card">
 
             <div class="trend-badge">
@@ -85,16 +76,13 @@ async function loadTrending() {
             <img
               src="${product.image}"
               class="trend-image"
-              onerror="this.src='https://via.placeholder.com/500?text=No+Image'"
+              onerror="this.src='https://via.placeholder.com/300?text=No+Image'"
             >
 
-            <h3>
-              ${product.name}
-            </h3>
+            <h3>${product.name}</h3>
 
             <div class="trend-score">
-              Trending Score:
-              ${product.trending_score}%
+              Trending ${product.trending_score}%
             </div>
 
             <div class="rating-row">
@@ -119,15 +107,8 @@ async function loadTrending() {
             </a>
 
           </div>
-        `;
-      });
 
-      html += `
-          </div>
-        </section>
-      `;
-
-      grid.innerHTML += html;
+        `).join("");
 
     });
 
@@ -135,12 +116,12 @@ async function loadTrending() {
 
     console.error(err);
 
-    grid.innerHTML = `
+    document.getElementById("trendingGrid").innerHTML = `
       <div style="
         text-align:center;
-        padding:50px;
+        padding:60px;
       ">
-        ❌ Failed to load trends
+        Failed to load trending products.
       </div>
     `;
   }
