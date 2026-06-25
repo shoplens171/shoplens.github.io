@@ -113,25 +113,39 @@ const file = e.target.files[0];
         const loader = document.createElement("div");
         loader.id = "scanLoader";
        loader.innerHTML = `
-<div class="scan-loader-box">
+<div class="premium-loader">
 
-<div class="scan-orb"></div>
-
-<h2>ShopLens AI</h2>
-
-<p>Analyzing Screenshot</p>
-
-<div class="scan-progress">
-<div class="scan-progress-fill"></div>
+<div class="loader-header">
+✨ ShopLens AI Scanner
 </div>
 
-<div class="scan-steps">
-<span>✓ Upload Received</span>
-<span>🔍 Detecting Product</span>
-<span>🏪 Searching Stores</span>
-<span>💰 Comparing Prices</span>
-<span>🧠 AI Matching</span>
+<div class="progress-row done">
+<div class="circle">✓</div>
+<span>Image Uploaded</span>
 </div>
+
+<div class="progress-row active">
+<div class="circle">⚡</div>
+<span>Identifying Product</span>
+</div>
+
+<div class="progress-row">
+<div class="circle">🔍</div>
+<span>Finding Best Deals</span>
+</div>
+
+<div class="progress-row">
+<div class="circle">🛡</div>
+<span>Safety Verification</span>
+</div>
+
+<div class="loader-bar">
+<div class="loader-fill"></div>
+</div>
+
+<p class="loader-text">
+Analyzing your product...
+</p>
 
 </div>
 `;
