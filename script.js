@@ -97,7 +97,10 @@ trigger.addEventListener('click', () => {
 });
     // FILE SELECT HANDLER
     picker.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
+
+document.getElementById("scanResultContainer").innerHTML = "";
+
+const file = e.target.files[0];
         if (!file) return;
 
         // safety check
