@@ -70,13 +70,18 @@ Return ONLY JSON:
 
     const raw = groqData?.choices?.[0]?.message?.content || "";
 
-    let parsed;
-    try {
-      parsed = JSON.parse(raw.replace(/```json|
-```/g, "").trim());
-    } catch {
-      parsed = { product_name: raw };
-    }
+   let parsed;
+
+try {
+  const cleaned = raw
+    .replaceAll("```json", "")
+    .replaceAll("```", "")
+    .trim();
+
+  parsed = JSON.parse(cleaned);
+} catch {
+  parsed = { product_name: raw };
+}
 
     let productName = parsed.product_name || "";
 
