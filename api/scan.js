@@ -51,8 +51,8 @@ No extra text.
 No JSON.
 No markdown.
 `
-}
-              {
+},
+{
                 type: "image_url",
                 image_url: {
                   url: image
