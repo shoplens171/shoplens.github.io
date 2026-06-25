@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -12,8 +11,9 @@ export default async function handler(req, res) {
 
   try {
     // =========================
-    // 1. VISION ANALYSIS
+    // 1. PRODUCT DETECTION
     // =========================
+
     const groqRes = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
       {
@@ -31,75 +31,80 @@ export default async function handler(req, res) {
                 {
                   type: "text",
                   text: `
-STRICT PRODUCT DETECTION TASK
+You are a product identification system.
+
+Identify ONLY the visible product.
 
 Rules:
-- Identify ONLY what is clearly visible.
-- NEVER assume Pro / Pro Max / Plus / Storage size.
-- NEVER guess hidden specs.
-- Provide the exact base model name (e.g., "Apple iPhone 15", "Nike Air Force 1").
-- If uncertain -> choose the general category.
+- Never guess Pro, Pro Max, Plus, Ultra, storage size, edition or generation.
+- If uncertain return the base model.
+- Return JSON only.
 
-Return ONLY JSON:
+Example:
+
 {
-  "product_name": "",
-  "confidence": 0
+  "product_name":"Apple iPhone 15",
+  "confidence":92
 }
-                  `,
+`
                 },
                 {
                   type: "image_url",
-                  image_url: { url: image },
-                },
-              ],
-            },
+                  image_url: {
+                    url: image
+                  }
+                }
+              ]
+            }
           ],
-          temperature: 0,
-        }),
+          temperature: 0
+        })
       }
     );
 
     const groqText = await groqRes.text();
 
     let groqData;
+
     try {
       groqData = JSON.parse(groqText);
     } catch {
-      return res.status(500).json({ error: "Vision parsing failed" });
+      return res.status(500).json({
+        error: "Vision parsing failed"
+      });
     }
 
-    const raw = groqData?.choices?.[0]?.message?.content || "";
+    const raw =
+      groqData?.choices?.[0]?.message?.content || "";
 
-   let parsed;
+    let parsed;
 
-try {
-  const cleaned = raw
-    .replaceAll("```json", "")
-    .replaceAll("```", "")
-    .trim();
+    try {
+      const cleaned = raw
+        .replaceAll("```json", "")
+        .replaceAll("```", "")
+        .trim();
 
-  parsed = JSON.parse(cleaned);
-} catch {
-  parsed = { product_name: raw };
-}
+      parsed = JSON.parse(cleaned);
+    } catch {
+      parsed = {
+        product_name: raw,
+        confidence: 70
+      };
+    }
 
-    let productName = parsed.product_name || "";
+    let productName = parsed.product_name?.trim();
 
     if (!productName) {
-      return res.status(500).json({ error: "No product detected" });
+      return res.status(500).json({
+        error: "No product detected"
+      });
     }
 
     // =========================
-    // 2. CLEAN PRODUCT NAME
+    // 2. SERPAPI SEARCH
     // =========================
-    productName = productName
-      .replace(/pro max/gi, "")
-      .replace(/plus/gi, "")
-      .trim();
 
-    // =========================
-    // 3. SERPAPI SEARCH
-    // =========================
     const serpRes = await fetch(
       `https://serpapi.com/search.json?engine=google_shopping&q=${encodeURIComponent(
         productName
@@ -107,93 +112,140 @@ try {
     );
 
     const serpData = await serpRes.json();
-    const results = serpData?.shopping_results || [];
+
+    const results =
+      serpData.shopping_results || [];
 
     // =========================
-    // 4. SAFE HELPERS
+    // 3. HELPERS
     // =========================
+
+    const cleanPrice = (price) => {
+      if (!price) return "N/A";
+
+      return price
+        .toString()
+        .replace(/[^\d₹$€,.]/g, "")
+        .trim();
+    };
+
+    const cleanImage = (url) => {
+      if (!url) {
+        return "https://via.placeholder.com/300?text=No+Image";
+      }
+
+      return url;
+    };
+
     const cleanUrl = (url) => {
       if (!url) return null;
+
       try {
-        const u = new URL(url);
-        return u.toString();
+        return new URL(url).toString();
       } catch {
         return null;
       }
     };
 
-    const cleanPrice = (p) =>
-      p ? p.toString().replace(/[^\d₹$€,.]/g, "").trim() : "N/A";
-
-    // New helper to fix broken alternative images
-    const cleanImage = (url) => {
-      if (!url || typeof url !== "string") {
-        return "https://via.placeholder.com/300?text=No+Image";
-      }
-      return url;
-    };
-
     // =========================
-    // 5. FILTER RESULTS
+    // 4. SMART FILTERING
     // =========================
-    // Improved logic: Checks if the title contains the main words, rather than just the first word.
+
+    const search = productName.toLowerCase();
+
     let filtered = results.filter((item) => {
-      const title = item.title?.toLowerCase() || "";
-      const searchWords = productName.toLowerCase().split(" ").filter(w => w.length > 2);
-      
-      // If there are words, ensure at least one strong word matches, otherwise keep it.
-      if (searchWords.length === 0) return true;
-      return searchWords.some(word => title.includes(word));
+      const title =
+        item.title?.toLowerCase() || "";
+
+      return title.includes(search);
     });
 
-    // Fallback if the filter accidentally removes everything
     if (filtered.length === 0) {
       filtered = results;
     }
 
-    const first = filtered.find((r) => r.price) || filtered[0] || results[0];
+    const first =
+      filtered.find((r) => r.price) ||
+      filtered[0];
 
-    // Handle edge case where no results are found at all
     if (!first) {
-      return res.status(404).json({ error: "Product search returned no results" });
+      return res.status(404).json({
+        error: "No shopping results found"
+      });
     }
 
+    console.log("MAIN PRODUCT:", first);
+
     // =========================
-    // 6. BUILD RESPONSE
+    // 5. RESPONSE
     // =========================
+
     return res.status(200).json({
-      product_name: first?.title || productName,
-      description: first?.snippet || "Detected by ShopLens AI",
+      product_name:
+        first.title || productName,
 
-      price: cleanPrice(first?.price),
+      description:
+        first.snippet ||
+        "Detected by ShopLens AI",
 
-      // Use the cleanImage helper
-      image: cleanImage(first?.thumbnail || results.find((r) => r.thumbnail)?.thumbnail),
+      price: cleanPrice(first.price),
 
-      // Swapped priority: 'link' (direct store) is often more reliable than 'product_link' (Google redirect)
-      buy_url: cleanUrl(first?.link) || cleanUrl(first?.product_link) || null,
+      image: cleanImage(
+        first.thumbnail ||
+          first.image
+      ),
 
-      store: first?.source || "Unknown",
-      rating: first?.rating || "N/A",
-      reviews: first?.reviews || "N/A",
+      buy_url:
+        cleanUrl(first.link) ||
+        cleanUrl(first.product_link),
 
-      confidence: parsed.confidence || 70,
+      store:
+        first.source ||
+        "Unknown Store",
+
+      rating:
+        first.rating || "N/A",
+
+      reviews:
+        first.reviews || "N/A",
+
+      confidence:
+        parsed.confidence || 70,
+
       safety_score: 98,
-      match_score: first?.price ? 95 : 80,
 
-      // Apply safe helpers to alternatives to fix broken links and images
+      match_score:
+        first.price ? 95 : 80,
+
+      sales_trend: "High",
+
       alternatives: filtered
-        .filter(item => item !== first) // Don't include the main product in alternatives
+        .filter((item) => item !== first)
         .slice(0, 5)
         .map((item) => ({
           title: item.title,
-          price: cleanPrice(item.price),
-          image: cleanImage(item.thumbnail),
-          link: cleanUrl(item.link) || cleanUrl(item.product_link) || null,
-        })),
+
+          price: cleanPrice(
+            item.price
+          ),
+
+          image: cleanImage(
+            item.thumbnail ||
+              item.image
+          ),
+
+          link:
+            cleanUrl(item.link) ||
+            cleanUrl(
+              item.product_link
+            )
+        }))
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: err.message });
+
+    return res.status(500).json({
+      error: err.message
+    });
   }
 }
