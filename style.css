@@ -862,3 +862,48 @@ color:white;
 font-family:var(--display);
 font-weight:700;
 }
+.scan-loader-box{
+width:320px;
+padding:30px;
+border-radius:30px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(25px);
+border:1px solid rgba(255,255,255,.2);
+text-align:center;
+}
+
+.scan-progress{
+height:10px;
+background:rgba(255,255,255,.1);
+border-radius:20px;
+overflow:hidden;
+margin:15px 0;
+}
+
+.scan-progress-fill{
+height:100%;
+width:100%;
+background:linear-gradient(
+90deg,
+#7c5cfc,
+#b5f23a
+);
+animation:loading 2s linear infinite;
+}
+
+.scan-steps{
+display:flex;
+flex-direction:column;
+gap:8px;
+margin-top:15px;
+font-size:13px;
+}
+
+@keyframes loading{
+from{
+transform:translateX(-100%);
+}
+to{
+transform:translateX(100%);
+}
+}
