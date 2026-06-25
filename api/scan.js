@@ -33,15 +33,11 @@ export default async function handler(req, res) {
 STRICT PRODUCT DETECTION TASK
 
 Rules:
-- Identify ONLY what is visible.
-- Provide the most common, consumer-friendly name (e.g., "Apple iPhone 15", "Nike Air Force 1").
-- NEVER assume Pro / Pro Max / Plus / Storage size unless clearly readable on the product.
+- Identify ONLY what is clearly visible.
+- NEVER assume Pro / Pro Max / Plus / Storage size.
 - NEVER guess hidden specs.
-- If uncertain -> choose the base model or generic brand category.
-
-Examples:
-- Image of red sneakers -> {"product_name": "Red Sneakers", "confidence": 95}
-- Image of a branded laptop -> {"product_name": "Brand Laptop", "confidence": 90}
+- Provide the exact base model name (e.g., "Apple iPhone 15", "Nike Air Force 1").
+- If uncertain -> choose the general category.
 
 Return ONLY JSON:
 {
@@ -75,7 +71,8 @@ Return ONLY JSON:
 
     let parsed;
     try {
-      parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+      parsed = JSON.parse(raw.replace(/```json|
+```/g, "").trim());
     } catch {
       parsed = { product_name: raw };
     }
@@ -106,10 +103,6 @@ Return ONLY JSON:
     const serpData = await serpRes.json();
     const results = serpData?.shopping_results || [];
 
-    if (results.length === 0) {
-      return res.status(404).json({ error: "No products found in the shopping index." });
-    }
-
     // =========================
     // 4. SAFE HELPERS
     // =========================
@@ -126,42 +119,53 @@ Return ONLY JSON:
     const cleanPrice = (p) =>
       p ? p.toString().replace(/[^\d₹$€,.]/g, "").trim() : "N/A";
 
+    // New helper to fix broken alternative images
+    const cleanImage = (url) => {
+      if (!url || typeof url !== "string") {
+        return "https://via.placeholder.com/300?text=No+Image";
+      }
+      return url;
+    };
+
     // =========================
     // 5. FILTER RESULTS
     // =========================
-    // Filter out single-letter words to avoid matching noise
-    const queryWords = productName.toLowerCase().split(" ").filter((w) => w.length > 1);
-
-    const filtered = results.filter((item) => {
+    // Improved logic: Checks if the title contains the main words, rather than just the first word.
+    let filtered = results.filter((item) => {
       const title = item.title?.toLowerCase() || "";
-      const matchCount = queryWords.filter((word) => title.includes(word)).length;
-      // Keep item if at least 50% of the words match, or a minimum of 2 words
-      return matchCount >= Math.min(2, Math.ceil(queryWords.length / 2));
+      const searchWords = productName.toLowerCase().split(" ").filter(w => w.length > 2);
+      
+      // If there are words, ensure at least one strong word matches, otherwise keep it.
+      if (searchWords.length === 0) return true;
+      return searchWords.some(word => title.includes(word));
     });
 
-    // Fallback: If the filter was too aggressive and wiped out all results, 
-    // trust the raw API sorting instead.
-    const finalResults = filtered.length > 0 ? filtered : results;
+    // Fallback if the filter accidentally removes everything
+    if (filtered.length === 0) {
+      filtered = results;
+    }
 
-    const first = finalResults.find((r) => r.price) || finalResults[0];
+    const first = filtered.find((r) => r.price) || filtered[0] || results[0];
+
+    // Handle edge case where no results are found at all
+    if (!first) {
+      return res.status(404).json({ error: "Product search returned no results" });
+    }
 
     // =========================
     // 6. BUILD RESPONSE
     // =========================
-    const safeImage =
-      first?.thumbnail ||
-      results.find((r) => r.thumbnail)?.thumbnail ||
-      "https://via.placeholder.com/150?text=No+Image";
-
-    const buyUrl = cleanUrl(first?.product_link) || cleanUrl(first?.link) || null;
-
     return res.status(200).json({
       product_name: first?.title || productName,
       description: first?.snippet || "Detected by ShopLens AI",
 
       price: cleanPrice(first?.price),
-      image: safeImage,
-      buy_url: buyUrl,
+
+      // Use the cleanImage helper
+      image: cleanImage(first?.thumbnail || results.find((r) => r.thumbnail)?.thumbnail),
+
+      // Swapped priority: 'link' (direct store) is often more reliable than 'product_link' (Google redirect)
+      buy_url: cleanUrl(first?.link) || cleanUrl(first?.product_link) || null,
 
       store: first?.source || "Unknown",
       rating: first?.rating || "N/A",
@@ -171,15 +175,19 @@ Return ONLY JSON:
       safety_score: 98,
       match_score: first?.price ? 95 : 80,
 
-      alternatives: finalResults.slice(0, 5).map((item) => ({
-        title: item.title,
-        price: cleanPrice(item.price),
-        image: item.thumbnail || "https://via.placeholder.com/150?text=No+Image",
-        link: cleanUrl(item.product_link) || cleanUrl(item.link) || null,
-      })),
+      // Apply safe helpers to alternatives to fix broken links and images
+      alternatives: filtered
+        .filter(item => item !== first) // Don't include the main product in alternatives
+        .slice(0, 5)
+        .map((item) => ({
+          title: item.title,
+          price: cleanPrice(item.price),
+          image: cleanImage(item.thumbnail),
+          link: cleanUrl(item.link) || cleanUrl(item.product_link) || null,
+        })),
     });
   } catch (err) {
-    console.error("Scanner API Error:", err);
+    console.error(err);
     return res.status(500).json({ error: err.message });
   }
 }
