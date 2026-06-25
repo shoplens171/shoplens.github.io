@@ -190,39 +190,58 @@ Analyzing your product...
 
     const resultBox = document.getElementById("scanResultContainer");
 
-    resultBox.innerHTML = `
-<div class="scan-result-card">
+resultBox.innerHTML = `
+<div class="premium-result">
 
-<img src="${data.image}" class="scan-product-image">
+<div class="product-left">
+<img src="${data.image}">
+</div>
 
-<div class="scan-product-info">
+<div class="product-right">
+
+<div class="match-badge">
+${data.match_score}% Match
+</div>
 
 <h2>${data.product_name}</h2>
 
 <p>${data.description}</p>
 
-<div class="score-row">
-<span>🎯 ${data.match_score}% Match</span>
-<span>🛡 ${data.safety_score}% Safe</span>
+<div class="stats-grid">
+
+<div class="stat">
+<span>💰 Price</span>
+<h3>${data.price}</h3>
 </div>
 
-<div class="price-row">
-💰 ${data.price}
+<div class="stat">
+<span>🛡 Safety</span>
+<h3>${data.safety_score}%</h3>
 </div>
 
-<div class="store-row">
-🏪 ${data.store}
+<div class="stat">
+<span>⭐ Rating</span>
+<h3>${data.rating}</h3>
+</div>
+
+<div class="stat">
+<span>🔥 Trend</span>
+<h3>${data.sales_trend}</h3>
+</div>
+
 </div>
 
 <a href="${data.buy_url}"
 target="_blank"
-class="visit-store-btn">
+class="store-btn">
 Visit Store →
 </a>
 
-</div>
+<div id="alternativeProducts"></div>
 
 </div>
+</div>
+`;
 `;
   const alternativesHtml =
 (data.alternatives || [])
