@@ -964,3 +964,32 @@ background:linear-gradient(
 color:white;
 text-decoration:none;
 }
+.alt-title{
+margin-top:25px;
+margin-bottom:15px;
+}
+
+.alt-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
+
+.alt-card{
+padding:12px;
+border-radius:20px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.15);
+}
+
+.alt-card img{
+width:100%;
+border-radius:15px;
+margin-bottom:8px;
+}
+
+.alt-card h4{
+font-size:14px;
+margin-bottom:5px;
+}
