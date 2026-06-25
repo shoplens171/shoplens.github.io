@@ -65,11 +65,13 @@ No markdown.`
 
     const groqData = await groqRes.json();
 
-    if (!groqRes.ok) {
-      return res.status(500).json({
-        error: groqData.error || "Groq request failed."
-      });
-    }
+   if (!groqRes.ok) {
+  console.log("GROQ ERROR:", groqData);
+
+  return res.status(500).json({
+    error: JSON.stringify(groqData)
+  });
+}
 
     const productName =
       groqData.choices?.[0]?.message?.content?.trim();
