@@ -1231,3 +1231,165 @@ box-sizing:border-box;
 [data-theme="dark"] .alt-card p{
     color:#d1d5db !important;
 }
+/* =========================
+   SHOPLENS FIX PACK
+   ========================= */
+
+/* LANDSCAPE FIX */
+
+html,
+body{
+    width:100%;
+    overflow-x:hidden;
+}
+
+@media screen and (orientation:landscape){
+
+    body{
+        width:100vw;
+        overflow-x:hidden;
+    }
+
+    .hero,
+    .features,
+    .trend-section,
+    .premium-result,
+    .scan-result-card{
+        width:100%;
+        max-width:100%;
+        margin-left:0;
+        margin-right:0;
+    }
+
+    .hero{
+        padding-left:15px;
+        padding-right:15px;
+    }
+
+    .navbar{
+        padding-left:15px;
+        padding-right:15px;
+    }
+
+    .orb-wrap{
+        transform:scale(.9);
+    }
+}
+
+/* MENU BUTTON ALWAYS VISIBLE */
+
+.menu-btn{
+    display:flex !important;
+    position:relative;
+    z-index:99999;
+}
+
+@media(min-width:651px){
+
+    .menu-btn{
+        display:none !important;
+    }
+
+}
+
+/* GLASSMORPHISM PRODUCT RESULT */
+
+.premium-result{
+    background:rgba(255,255,255,.12);
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+    border:1px solid rgba(255,255,255,.18);
+    box-shadow:0 8px 32px rgba(0,0,0,.12);
+}
+
+/* STATS */
+
+.stat{
+    background:rgba(255,255,255,.12);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.15);
+}
+
+/* ALTERNATIVE PRODUCTS */
+
+.alt-card{
+    display:block;
+    text-decoration:none;
+    background:rgba(255,255,255,.12);
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:20px;
+    overflow:hidden;
+    transition:.25s;
+    color:#111;
+}
+
+.alt-card:hover{
+    transform:translateY(-4px);
+}
+
+.alt-card h4{
+    color:#111;
+    font-size:14px;
+    font-weight:700;
+    margin-top:8px;
+}
+
+.alt-card p{
+    color:#333;
+    font-weight:600;
+}
+
+/* DARK MODE ALT PRODUCTS */
+
+[data-theme="dark"] .alt-card{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+}
+
+[data-theme="dark"] .alt-card h4{
+    color:#fff;
+}
+
+[data-theme="dark"] .alt-card p{
+    color:#ddd;
+}
+
+/* DARK MODE RESULT CARD */
+
+[data-theme="dark"] .premium-result{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+}
+
+[data-theme="dark"] .stat{
+    background:rgba(255,255,255,.05);
+    color:white;
+}
+
+/* BETTER MOBILE PRODUCT IMAGE */
+
+.product-left img{
+    width:100%;
+    max-width:320px;
+    object-fit:contain;
+    display:block;
+    margin:auto;
+}
+
+/* BETTER ALT GRID */
+
+.alt-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+}
+
+@media(max-width:500px){
+
+    .alt-grid{
+        grid-template-columns:1fr;
+    }
+
+}
