@@ -92,9 +92,9 @@ overlay?.addEventListener("click", closeDrawer);
         picker.click();
     };
 
-    trigger.addEventListener('click', openPicker);
-    trigger.addEventListener('touchstart', openPicker);
-
+    trigger.addEventListener('click', () => {
+    picker.click();
+});
     // FILE SELECT HANDLER
     picker.addEventListener('change', async (e) => {
         const file = e.target.files[0];
