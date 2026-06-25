@@ -21,10 +21,10 @@ module.exports = async function handler(req, res) {
         messages: [
           {
             role: "user",
-            content: [
-             {
-  type: "text",
-  text: `Identify the EXACT product shown in this image.
+content: [
+  {
+    type: "text",
+    text: `Identify the EXACT product shown in this image.
 
 Rules:
 
@@ -39,9 +39,7 @@ Rules:
 Examples:
 
 Nike Air Max 270 Black Men's Running Shoes
-
 Apple AirPods Pro 2nd Generation USB-C
-
 Samsung Galaxy S24 Ultra Titanium Black
 
 Return ONLY the exact product title.
@@ -49,16 +47,16 @@ Return ONLY the exact product title.
 No explanation.
 No extra text.
 No JSON.
-No markdown.
-`
-},
-{
-                type: "image_url",
-                image_url: {
-                  url: image
-                }
-              }
-            ]
+No markdown.`
+  },
+
+  {
+    type: "image_url",
+    image_url: {
+      url: image
+    }
+  }
+]
           }
         ],
         temperature: 0
