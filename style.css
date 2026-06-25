@@ -907,3 +907,60 @@ to{
 transform:translateX(100%);
 }
 }
+.scan-result-card{
+margin-top:25px;
+padding:20px;
+border-radius:30px;
+background:rgba(255,255,255,.15);
+backdrop-filter:blur(25px);
+border:1px solid rgba(255,255,255,.3);
+}
+
+.scan-product-image{
+width:100%;
+border-radius:20px;
+margin-bottom:15px;
+}
+
+.scan-product-info h2{
+font-size:22px;
+margin-bottom:10px;
+}
+
+.score-row{
+display:flex;
+gap:10px;
+margin-top:10px;
+flex-wrap:wrap;
+}
+
+.score-row span{
+background:rgba(255,255,255,.15);
+padding:8px 12px;
+border-radius:20px;
+}
+
+.price-row{
+margin-top:15px;
+font-size:20px;
+font-weight:700;
+}
+
+.store-row{
+margin-top:8px;
+opacity:.8;
+}
+
+.visit-store-btn{
+display:inline-block;
+margin-top:18px;
+padding:12px 22px;
+border-radius:999px;
+background:linear-gradient(
+135deg,
+#7c5cfc,
+#5238c8
+);
+color:white;
+text-decoration:none;
+}
