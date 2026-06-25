@@ -64,45 +64,21 @@ module.exports = async function handler(req, res) {
 
    const first = serpData.shopping_results?.[0];
 
-if (!first) {
-  return res.status(200).json({
-    product_name: productName,
-    description: "Product identified by ShopLens AI",
-    price: "Not Found",
-    image: "",
-    buy_url: "",
-    store: "Unknown Store",
-    rating: "N/A",
-    reviews: "N/A",
-    safety_score: 85,
-    sales_trend: "Unknown",
-    match_score: 70
-  });
-}
-
 const productData = {
-  product_name: first.title || productName,
-  description: first.snippet || "Product identified by ShopLens AI",
-  price: first.price || "N/A",
-  image: first.thumbnail || "",
-  buy_url: first.product_link || first.link || "#",
-  store: first.source || "Unknown Store",
-  rating: first.rating || "N/A",
-  reviews: first.reviews || "N/A",
+  product_name: first?.title || productName,
+  description: first?.snippet || "Product identified by ShopLens AI",
+  price: first?.price || "N/A",
+  image: first?.thumbnail || "",
+  buy_url: first?.product_link || first?.link || "#",
+  store: first?.source || "Unknown Store",
+  rating: first?.rating || "N/A",
+  reviews: first?.reviews || "N/A",
   safety_score: 97,
   sales_trend: "High",
   match_score: 98
 };
 
 return res.status(200).json(productData);
-    }
-
-    return res.status(200).json({
-      product_name: first.title,
-      price: first.price,
-      image: first.thumbnail,
-      buy_url: first.link
-    });
 
   } catch (err) {
     console.error(err);
