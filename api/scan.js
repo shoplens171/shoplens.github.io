@@ -24,7 +24,7 @@ export default async function handler(req, res) {
             content: [
               {
                 type: "text",
-                text: "Identify the main product in this image. Reply with ONLY the product name. Example: 'Nike Air Max 270 Black'. No explanation."
+                text: "Identify the EXACT product shown. Include brand, model, color, edition, size, variant and generation if visible. Example: Nike Air Max 270 Black Men's Running Shoes. Reply ONLY with the exact product name."
               },
               {
                 type: "image_url",
