@@ -33,10 +33,15 @@ export default async function handler(req, res) {
 STRICT PRODUCT DETECTION TASK
 
 Rules:
-- Identify ONLY what is visible
-- NEVER assume Pro / Pro Max / Plus
-- NEVER guess hidden specs
-- If uncertain → choose base model
+- Identify ONLY what is visible.
+- Provide the most common, consumer-friendly name (e.g., "Apple iPhone 15", "Nike Air Force 1").
+- NEVER assume Pro / Pro Max / Plus / Storage size unless clearly readable on the product.
+- NEVER guess hidden specs.
+- If uncertain -> choose the base model or generic brand category.
+
+Examples:
+- Image of red sneakers -> {"product_name": "Red Sneakers", "confidence": 95}
+- Image of a branded laptop -> {"product_name": "Brand Laptop", "confidence": 90}
 
 Return ONLY JSON:
 {
@@ -66,8 +71,7 @@ Return ONLY JSON:
       return res.status(500).json({ error: "Vision parsing failed" });
     }
 
-    const raw =
-      groqData?.choices?.[0]?.message?.content || "";
+    const raw = groqData?.choices?.[0]?.message?.content || "";
 
     let parsed;
     try {
@@ -102,8 +106,9 @@ Return ONLY JSON:
     const serpData = await serpRes.json();
     const results = serpData?.shopping_results || [];
 
-    const first =
-      results.find((r) => r.price) || results[0];
+    if (results.length === 0) {
+      return res.status(404).json({ error: "No products found in the shopping index." });
+    }
 
     // =========================
     // 4. SAFE HELPERS
@@ -119,35 +124,44 @@ Return ONLY JSON:
     };
 
     const cleanPrice = (p) =>
-      p ? p.replace(/[^\d₹$€,.]/g, "").trim() : "N/A";
+      p ? p.toString().replace(/[^\d₹$€,.]/g, "").trim() : "N/A";
 
     // =========================
     // 5. FILTER RESULTS
     // =========================
-    const filtered = results.filter((item) =>
-      item.title?.toLowerCase().includes(
-        productName.toLowerCase().split(" ")[0]
-      )
-    );
+    // Filter out single-letter words to avoid matching noise
+    const queryWords = productName.toLowerCase().split(" ").filter((w) => w.length > 1);
+
+    const filtered = results.filter((item) => {
+      const title = item.title?.toLowerCase() || "";
+      const matchCount = queryWords.filter((word) => title.includes(word)).length;
+      // Keep item if at least 50% of the words match, or a minimum of 2 words
+      return matchCount >= Math.min(2, Math.ceil(queryWords.length / 2));
+    });
+
+    // Fallback: If the filter was too aggressive and wiped out all results, 
+    // trust the raw API sorting instead.
+    const finalResults = filtered.length > 0 ? filtered : results;
+
+    const first = finalResults.find((r) => r.price) || finalResults[0];
 
     // =========================
     // 6. BUILD RESPONSE
     // =========================
+    const safeImage =
+      first?.thumbnail ||
+      results.find((r) => r.thumbnail)?.thumbnail ||
+      "https://via.placeholder.com/150?text=No+Image";
+
+    const buyUrl = cleanUrl(first?.product_link) || cleanUrl(first?.link) || null;
+
     return res.status(200).json({
       product_name: first?.title || productName,
       description: first?.snippet || "Detected by ShopLens AI",
 
       price: cleanPrice(first?.price),
-
-      image:
-        first?.thumbnail ||
-        results.find((r) => r.thumbnail)?.thumbnail ||
-        "",
-
-      buy_url:
-        cleanUrl(first?.product_link) ||
-        cleanUrl(first?.link) ||
-        null,
+      image: safeImage,
+      buy_url: buyUrl,
 
       store: first?.source || "Unknown",
       rating: first?.rating || "N/A",
@@ -157,20 +171,15 @@ Return ONLY JSON:
       safety_score: 98,
       match_score: first?.price ? 95 : 80,
 
-      alternatives: filtered.slice(0, 5).map((item) => ({
+      alternatives: finalResults.slice(0, 5).map((item) => ({
         title: item.title,
         price: cleanPrice(item.price),
-        image:
-          item.thumbnail ||
-          "https://via.placeholder.com/150",
-        link:
-          cleanUrl(item.product_link) ||
-          cleanUrl(item.link) ||
-          null,
+        image: item.thumbnail || "https://via.placeholder.com/150?text=No+Image",
+        link: cleanUrl(item.product_link) || cleanUrl(item.link) || null,
       })),
     });
   } catch (err) {
-    console.error(err);
+    console.error("Scanner API Error:", err);
     return res.status(500).json({ error: err.message });
   }
 }
