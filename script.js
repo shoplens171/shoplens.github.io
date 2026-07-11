@@ -280,3 +280,8 @@ ${alternativesHtml}
         };
     });
 });
+const bottomBtn = document.getElementById("scanTriggerBottom");
+
+bottomBtn?.addEventListener("click", () => {
+  document.getElementById("filePicker")?.click();
+});
